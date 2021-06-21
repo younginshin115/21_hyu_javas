@@ -1,39 +1,38 @@
-# Command line instructions
-You can also upload existing files from your computer using the instructions below.
+# 프로젝트 주제 : 채팅 메시지 분석 ML-Bot
+
+### 조원
+
+|이름|이메일|역할|
+|:----:|:---|:---|
+|이수현|lshyun955@gmail.com|<b>조장</b>, 웹개발(로그인 페이지, 영상 재생 부분, 채팅창 긍부정 수치 부분)|
+|신영인|younginshin115@gmail.com|PM, 웹개발(채팅 부분, 워드 클라우드 부분, 카프카프로듀서-웹 연동)|
+|임재일|jaeillim89@naver.com|비속어 감지 머신 러닝 모델링|
+|맹광국|ggmaeng@gmail.com|감정 긍/부정 분석 머신 러닝 모델링|
+|손덕기|deokki9880@gmail.com|학습 데이터 크롤링, 파이썬-카프카프로듀서 연동|
+|장지연|delayeon9934@naver.com|데이터 파이프라인 구축, 카프카컨슈머-스파크 연동, 스파크에서 데이터 전처리, 스파크-MariaDB 연동, 스파크-카프카프로듀서 연동|
 
 
-# Git global setup
-```
-git config --global user.name "KYOUGYUN LEE"
-git config --global user.email "skyblue.lee@gmail.com"
-```
+### 진행사항
+|이수현||
+|:---:|:---|
+|6/21||
 
-# 새 저장소 만들기
-```
-git clone https://gitlab.com/hy21-pbl-chat-analysis/hy21-pbl-chat-analysis.git
-cd hy21-pbl-chat-analysis
-git switch -c main
-touch README.md
-git add README.md
-git commit -m "add README"
-git push -u origin main
-```
+||신영인|
+|:---:|:---|
+|6/21||
 
-# Push an existing folder
-```
-cd existing_folder
-git init --initial-branch=main
-git remote add origin https://gitlab.com/hy21-pbl-chat-analysis/hy21-pbl-chat-analysis.git
-git add .
-git commit -m "Initial commit"
-git push -u origin main
-```
+||임재일|
+|:---:|:---|
+|6/21||
 
-# Push an existing Git repository
-```
-cd existing_repo
-git remote rename origin old-origin
-git remote add origin https://gitlab.com/hy21-pbl-chat-analysis/hy21-pbl-chat-analysis.git
-git push -u origin --all
-git push -u origin --tags
-```
+||맹광국|
+|:---:|:---|
+|6/21||
+
+||손덕기|
+|:---:|:---|
+|6/21||
+
+||장지연|
+|:---:|:---|
+|6/21||
