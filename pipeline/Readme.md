@@ -38,9 +38,11 @@ cd /adminuser/home/mymodel
 vi emotion0628.py
 vi abuse0628.py
 ```
-**(emotion0628.py, abuse0628.py 파일은 따로 올려놓음)**
+
 
 <span style="color:blue">**4.h5 모델,말뭉치 filezila를 통해 /adminuser/home/mymodel 파일에 넣기**</span>
+**(emotion0628.py, abuse0628.py 파일은 따로 올려놓음)**
+
 
 <span style="color:blue">**5.checkpoint 폴더 만들기 -> 스파크가 계속 돌기 때문에 shutdown되면 메시지를 남겨줄 폴더를 만들어야함(같은 checkpoint에서 여러 번 돌리면 오류가 생기므로 새 폴더를 만들어서 해결하면 됨!)**</span>
 
@@ -67,12 +69,12 @@ cd /usr/local/kafka/bin
 ./kafka-server-start.sh ../config/server.properties
 ```
 
-(3) 카프카 콘솔 열기(inchat, outchat) -> 새로운 terminal 열기            
-**--from-beginning : 처음에 한번만 해주면 됨(후에도 계속 치면 들어가있는거 다 나옴)**
-=================================================    
+(3) 카프카 콘솔 열기(inchat, outchat) -> 새로운 terminal 열기,                   
+--from-beginning : 처음에 한번만 해주면 됨(후에도 계속 치면 들어가있는거 다 나옴)   
+<topic>
 kafka에서 들어오는 topic : inchat          
 모델 적용된 데이터를 kafka로 보내는 topic : outchat   
-=================================================      
+     
 ```
 cd /usr/local/kafka/bin
 
@@ -124,15 +126,15 @@ df_raw = spark \
 .load()         
 ```
 
-<코드설명>
+**<<코드설명>>**
 df_raw = spark \
 .readStream \
-<span style="color:purple">**#kafka 형태로**</span>  
+**#kafka 형태로**</span>  
 .format('kafka') \
-<span style="color:purple">**#kafka 포트 : 9092**</span> 
+**#kafka 포트 : 9092**</span> 
 .option('kafka.bootstrap.servers', 'localhost:9092') \          
-<span style="color:purple">**#처음부터 실행**</span> 
+**#처음부터 실행**</span> 
 .option("startingOffsets", "earliest") \          
-<span style="color:purple">**topic inchat에서 읽어옴**</span>           
+**topic inchat에서 읽어옴**</span>           
 .option('subscribe', 'inchat') \          
 .load()         
