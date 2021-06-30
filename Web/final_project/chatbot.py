@@ -6,6 +6,8 @@ from flask import jsonify
 
 import pafy
 import multiprocessing as mp
+import os
+from glob import glob
 
 import c_crawling
 import c_kafka
@@ -24,6 +26,7 @@ def main_chatbot():
     if mp.active_children():
         for i in mp.active_children():
             i.terminate()
+            [os.remove(f) for f in glob("./static/img/*.png")]
     return render_template('index.html')
 
 @app.route('/chatcategory', methods=['POST'])
@@ -32,17 +35,25 @@ def chat_category():
     url_val = request.form.get('searchbar')
     if url_val:
         if category_val == 'youtube':
-            url_id = url_val.split("=")[1] # 주소 형태 : https://www.youtube.com/watch?v=MN1JsMbNMs0
-            p = mp.Process(target=cc.youtube_to_kafka, args=(url_id, kafka_topic,))
-            p.start()
-            pafy.set_api_key('AIzaSyB0oN8aGAJDk5PEWpR07Tn7gN4w30fwnOI')
-            v = pafy.new(url_id)
-            return render_template('result.html', data_list=v.title)
+            try:
+                url_id = url_val.split("=")[1] # 주소 형태 : https://www.youtube.com/watch?v=MN1JsMbNMs0
+                p = mp.Process(target=cc.youtube_to_kafka, args=(url_id, kafka_topic,))
+                p.start()
+                pafy.set_api_key('AIzaSyB0oN8aGAJDk5PEWpR07Tn7gN4w30fwnOI')
+                v = pafy.new(url_id)
+                return render_template('result.html', data_list=v.title)
+            except:
+                flash('Youtube URL을 입력해주세요')
+                return render_template('index.html')
         elif category_val == 'twitch':
             url_id = url_val.split("/")[-1] # 주소 형태: https://www.twitch.tv/lol_ambition
-            p = mp.Process(target=cc.twitch_to_kafka, args=(url_id, kafka_topic,))
-            p.start()
-            return render_template('result.html', data_list=url_id+'의 방송입니다')
+            if '=' in url_id:
+                flash('Twitch URL을 입력해주세요')
+                return render_template('index.html')
+            else:
+                p = mp.Process(target=cc.twitch_to_kafka, args=(url_id, kafka_topic,))
+                p.start()
+                return render_template('result.html', data_list=url_id+'의 방송입니다')
         elif category_val == 'afreecatv':
             return render_template('result.html', data_list='아직 구현되지 않은 기능입니다')
     else:
