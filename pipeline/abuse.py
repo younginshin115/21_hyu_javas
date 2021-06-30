@@ -14,6 +14,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+
 loaded_model = load_model('/home/adminuser/slang_model_0.1.h5') 
 
 okt = Okt() 
