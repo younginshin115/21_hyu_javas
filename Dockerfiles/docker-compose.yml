@@ -15,13 +15,13 @@ services:
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
     command: "/start-master.sh"
-  
+
   spark-worker:
     image: merolhack/spark:latest
     depends_on:
       - spark-master
     ports:
-      - 8080
+      - "8080"
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
       - "SPARK_WORKER_WEBUI_PORT=8080"
@@ -41,12 +41,71 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-        #  dash_app:
+  mogodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cjo
+      MONGO_INITDB_ROOT_PASSWORD: cjo
+    volumes:
+      - type: bind
+        source: ./data/db
+        target: /data/db
+
+  elasticsearch:
+    container_name: elasticsearch
+    hostname: elasticsearch
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+      - type: volume
+        source: ./elasticsearch
+        target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+      discovery.type: single-node
+
+  logstash:
+    container_name: logstash
+    hostname: logstash
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: false
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+
         # container_name: dash_app
         # restart: always
         # build: ./flaskdocker/dash_app
         # ports:
-        # - "8000:8000"
+        # - "5000:5000"
         # command: gunicorn -w 1 -b :8000 app:server
 
         # nginx:
