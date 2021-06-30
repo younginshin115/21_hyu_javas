@@ -23,7 +23,7 @@ okt = Okt() # 형태소 분석기 객체 생성
 stopwords = ['의','가','이','은','들','는','좀','잘','걍','과','도','를','으로','자','에','와','한','하다'] # 불용어 정의
 max_len = 30 # 패딩 길이 정의
 tokenizer = Tokenizer() # 토크나이저 객체 생성
-with open('sentiment_vocab_0.1.json') as json_file:
+with open('sentiment_vocab_0.1.json', encoding='UTF8') as json_file:
   vocab = json.load(json_file)
   tokenizer.word_index = vocab
 
@@ -37,8 +37,13 @@ def sentiment_predict(new_sentence):
   encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
   pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
   score = float(loaded_model.predict(pad_new)) # 예측
-  return score
-  # if(score > 0.5):
-  #   print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
-  # else:
-  #   print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
+  #return score
+  if(score > 0.5):
+    print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
+  else:
+     print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
+
+# 로컬IDE에서 동작 테스트
+while True:
+  new_sentence = input("리뷰를 입력하세요 ")
+  sentiment_predict(new_sentence)
