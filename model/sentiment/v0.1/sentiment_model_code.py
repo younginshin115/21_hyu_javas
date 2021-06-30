@@ -4,6 +4,7 @@ import numpy as np
 # %matplotlib inline
 import matplotlib.pyplot as plt
 import re
+import os
 import urllib.request
 import json
 from konlpy.tag import Okt
@@ -13,6 +14,9 @@ from tensorflow.keras.layers import Embedding, Dense, LSTM
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
+# 가상환경에서 GPU사용불가로 인한 오류메시지 숨김
+os.environ['TF_CPP_MIN_LOG_LEVEL']='3'
 
 # 전처리 및 모델 로드
 # 모델 가중치 파일 로드
@@ -43,7 +47,10 @@ def sentiment_predict(new_sentence):
   else:
      print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
 
+
+
+
 # 로컬IDE에서 동작 테스트
-while True:
-  new_sentence = input("리뷰를 입력하세요 ")
-  sentiment_predict(new_sentence)
+# while True:
+#   new_sentence = input("리뷰를 입력하세요 ")
+#   sentiment_predict(new_sentence)
