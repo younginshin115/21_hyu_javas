@@ -6,6 +6,8 @@ from flask import jsonify
 
 import pafy
 import multiprocessing as mp
+import os
+from glob import glob
 
 import c_crawling
 import c_kafka
@@ -24,6 +26,7 @@ def main_chatbot():
     if mp.active_children():
         for i in mp.active_children():
             i.terminate()
+            [os.remove(f) for f in glob("./static/img/*.png")]
     return render_template('index.html')
 
 @app.route('/chatcategory', methods=['POST'])
