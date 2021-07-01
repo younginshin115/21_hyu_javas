@@ -24,7 +24,7 @@ def sentiment_predict(new_sentence):
   # if not str 로 하면 if에서 변수가 공백 및 null값은 false로 반환하므로 비교연산자를 안써도되는데
   # 실제로는 null은 잡는데 공배은 못잡아서 그냥 비교연산자씀
   if new_sentence == "" or new_sentence.isspace():    # 공백이거나 NUll 인 경우
-    return float(-1)  # 프론트에서 계산에 미포함되도록 (0-1)구간 예외값 리턴
+    exit()  # 라벨링할 때에는 삭제하자
   else :                                            # 공백이거나 NUll 인 아닌 경우
     new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화,   "stem =True" 어간 추출(ex 해야지 -> 하다)
     new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어 제거
