@@ -1,19 +1,11 @@
 # 필요 프레임워크 및 라이브러리 준비
-import pandas as pd
-import numpy as np
-# %matplotlib inline
-import matplotlib.pyplot as plt
 import re
-import urllib.request
 import os
 import json
 from konlpy.tag import Okt
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, Dense, LSTM
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # 가상환경에서 GPU사용불가로 인한 오류메시지 숨김
 os.environ['TF_CPP_MIN_LOG_LEVEL']='3'
@@ -46,18 +38,20 @@ def slang_predict(new_sentence):
     pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
     score = float(loaded_model.predict(pad_new)) # 예측
     return round(score, 2)
+
+  # 코랩/주피터에서 동작 테스트 코드
   # if (score > 0.5):
   #   print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
   # else:
   #   print("{:.2f}% 확률로 비속어가 포함되지 않은 문장입니다..\n".format((1 - score) * 100))
 
 
-# 로컬IDE에서 동작 테스트
-while True:
-  new_sentence = input("욕해봐 ")
-  score = slang_predict(new_sentence)
-  print(score)
-  if (score > 0.5):
-    print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
-  else:
-    print("{:.2f}% 확률로 비속어가 포함되지 않은 문장입니다..\n".format((1 - score) * 100))
+# 로컬IDE에서 동작 테스트 코드
+# while True:
+#   new_sentence = input("욕해봐 ")
+#   score = slang_predict(new_sentence)
+#   print(score)
+#   if (score > 0.5):
+#     print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
+#   else:
+#     print("{:.2f}% 확률로 비속어가 포함되지 않은 문장입니다..\n".format((1 - score) * 100))
