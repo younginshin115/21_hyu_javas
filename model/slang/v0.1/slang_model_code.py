@@ -34,11 +34,13 @@ def slang_predict(new_sentence):
   else :                                            # 공백이거나 NUll 인 아닌 경우
     new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화,   "stem =True" 어간 추출(ex 해야지 -> 하다)
     new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어 제거
-    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
-    pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
-    score = float(loaded_model.predict(pad_new)) # 예측
-    return round(score, 2)
-
+    if not new_sentence : # 불용어 제거 후 빈리스트 인 경우
+      return float(-1)
+    else:
+      encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
+      pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
+      score = loaded_model.predict(pad_new) # 예측
+      return round(float(score), 2)
   # 코랩/주피터에서 동작 테스트 코드
   # if (score > 0.5):
   #   print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
@@ -47,11 +49,11 @@ def slang_predict(new_sentence):
 
 
 # 로컬IDE에서 동작 테스트 코드
-# while True:
-#   new_sentence = input("욕해봐 ")
-#   score = slang_predict(new_sentence)
-#   print(score)
-#   if (score > 0.5):
-#     print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
-#   else:
-#     print("{:.2f}% 확률로 비속어가 포함되지 않은 문장입니다..\n".format((1 - score) * 100))
+while True:
+  new_sentence = input("욕해봐 ")
+  score = slang_predict(new_sentence)
+  print(score)
+  if (score > 0.5):
+    print("{:.2f}% 확률로 비속어가 포함된 문장입니다.\n".format(score * 100))
+  else:
+    print("{:.2f}% 확률로 비속어가 포함되지 않은 문장입니다..\n".format((1 - score) * 100))
