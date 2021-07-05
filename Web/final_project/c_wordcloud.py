@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from wordcloud import WordCloud
 
 class c_wordcloud:
