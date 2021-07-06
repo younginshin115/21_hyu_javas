@@ -12,6 +12,7 @@ from glob import glob
 import c_crawling
 import c_kafka
 import c_wordcloud
+import time
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'admin'
@@ -26,7 +27,10 @@ def main_chatbot():
     if mp.active_children():
         for i in mp.active_children():
             i.terminate()
-            [os.remove(f) for f in glob("./static/img/*.png")]
+    time.sleep(0.1)
+    [os.remove(f) for f in glob("./static/img/*.png")]
+    global wordcloud_lst
+    wordcloud_lst = ['시작']
     return render_template('index.html')
 
 @app.route('/chatcategory', methods=['POST'])
@@ -70,11 +74,12 @@ def update():
         print({"msg": message.value})
         if message.value['noun_token']:
             wordcloud_lst.extend(message.value['noun_token'])
-        if len(wordcloud_lst) > 1000:
-            del wordcloud_lst[:len(wordcloud_lst) - 1000]
+        if len(wordcloud_lst) > 200:
+            del wordcloud_lst[:len(wordcloud_lst) - 200]
         cwc.woco_pic(wordcloud_lst, num, message.value['video_id'])
         num += 1
-        image_name = message.value['video_id']+str(num-1)+".png"
+        image_name = message.value['video_id']+"_"+str(num-5).zfill(4)+".png"
+        print(len(wordcloud_lst))
         return jsonify({"msg":message.value, "image_name": image_name})
 
 import logging
