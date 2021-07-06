@@ -1,4 +1,6 @@
 FROM openjdk:8-alpine
+COPY --from=nvidia/cuda:11.3.1-devel-ubuntu18.04 / /
+COPY --from=python:3.9.5 / /
 ARG SPARK_VERSION=3.1.2
 ARG HADOOP_VERSION=3.2
 
@@ -8,7 +10,8 @@ COPY start-worker.sh /start-worker.sh
 RUN echo "* Installing Spark version: ${SPARK_VERSION}"
 RUN echo "* Installing Hadoop version: ${HADOOP_VERSION}"
 
-RUN apk --update add wget tar bash curl python3
+RUN apk --update add wget tar bash curl vim
+
 RUN wget https://mirror.navercorp.com/apache/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 
 RUN tar -zxvf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
@@ -27,11 +30,19 @@ ENV PYSPARK_PYTHON=python3
 #ENV PYTHONPATH="/spark/python:/spark/python/lib/py4j-0.10.9-src.zip:/spark/python/lib/pyspark.zip:${PYTHONPATH}"
 ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-0.10.9-src.zip:${PYTHONPATH}"
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends -f \
+    nvidia-modprobe
+
+ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/cuda-11.3/lib64/stubs:/usr/local/cuda-11.3/compat
+
 RUN chmod +x /start-master.sh
 RUN chmod +x /start-worker.sh
-
 WORKDIR /spark
 
+COPY . /spark
 
-
-
+RUN pip install --upgrade pip && \
+pip install --no-cache-dir -r requirements.txt && \
+sed -i "s|convertStrings\=True| |g" /usr/local/lib/python3.9/site-packages/konlpy/jvm.py && \
+sed -i "s|)\,|)|g" /usr/local/lib/python3.9/site-packages/konlpy/jvm.py

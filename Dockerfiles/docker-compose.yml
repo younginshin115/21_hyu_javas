@@ -5,7 +5,7 @@ services:
     container_name: spark-master
     hostname: spark-master
     build:
-      context: .
+      context: spark-master/
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -14,7 +14,12 @@ services:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
+      - "NVIDIA_VISIBLE_DEVICES=all"
     command: "/start-master.sh"
+    devices:
+      - /dev/nvidia0
+      - /dev/nvidiactl
+      - /dev/nvidia-uvm
 
   spark-worker:
     image: merolhack/spark:latest
@@ -37,7 +42,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "test123:1:1"
+      KAFKA_CREATE_TOPICS: "test123:1:1,inchat:1:1,outchat:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -101,18 +106,17 @@ services:
     depends_on:
       - elasticsearch
 
-        # container_name: dash_app
-        # restart: always
-        # build: ./flaskdocker/dash_app
-        # ports:
-        # - "5000:5000"
-        # command: gunicorn -w 1 -b :8000 app:server
+  flask:
+    container_name: flask
+    restart: always
+    build: ./flaskdocker
+    expose:
+      - 5005
 
-        # nginx:
-        # container_name: nginx
-        # restart: always
-        # build: ./flaskdocker/nginx
-        # ports:
-        # - "80:80"
-        # depends_on:
-        # - dash_app
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginxdocker
+    ports:
+      - "5307:5307"
+
