@@ -10,7 +10,3 @@
 ## Usage
 
 
-
-## Issues and Contributing
-
-
