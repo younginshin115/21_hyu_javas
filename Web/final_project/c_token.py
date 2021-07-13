@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from konlpy.tag import Okt
 import re
 from jamo import h2j, j2hcj

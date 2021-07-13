@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from pytchat import LiveChat
 import pafy
 
@@ -7,8 +9,6 @@ from datetime import datetime as dt
 
 import c_kafka
 import c_token
-
-import random # 삭제 필요
 
 ck = c_kafka.c_kafka()
 
@@ -91,13 +91,7 @@ class c_crawling():
             "user_name": user_name,
             "chat_id": chat_id,
             "chat_text": chat_text,
-            "modified_text": ct.only_korean(chat_text),
-            "h_token": ct.m_tokenize(chat_text),
-            "j_token": ct.c_tokenize(chat_text),
-            "hj_token": ct.cm_tokenize(chat_text),
             "noun_token": ct.noun_tokenize(chat_text),
-            "chat_time": chat_time,
-            "emotion": round(random.random(), 1), # 기능 테스트옹 삭제 필요
-            "abuse": round(random.random(), 1) # 기능 테스트용 삭제 필요
+            "chat_time": chat_time
         }
         return tmp_json
