@@ -1,4 +1,5 @@
 body {
+    margin: 0; padding: 0;
     font-family: 'NanumSquare', sans-serif;
     background: #F0F0F0;
 } .normal {
@@ -10,8 +11,6 @@ body {
 } .light {
     font-weight: 300;
 }
-
-.content.container {}
 
 .url_wrap {
     width: 100%;
@@ -185,8 +184,8 @@ body {
 
 .icon_btn {
     width: 180px;
-    margin-top: 3px;
-    margin-bottom: -10px;
+    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
 .btn {
@@ -196,10 +195,24 @@ body {
     border: 1px black solid;
 }
 
+.header {
+    background: linear-gradient(to left, #0054FF, #0030DB);
+    height: 40px;
+} .icon_result {
+    height: 80%;
+    margin: 3px;
+}
+
+
 .wrap {
-    text-align: center;
-    margin: 5px;
+    margin: 0 auto;
+    background: white;
+    width: 100%; max-width: 1200px;
+    height: 100%;
     vertical-align: top;
+    padding: 10px;
+    text-align: center;
+
 }
 
 .chat_table_div {
@@ -257,4 +270,39 @@ body {
     padding=3px;
     font-size: 35px;
     font-weight: bold;
+}
+
+.float_btn {
+    position: fixed; bottom: 10px; right: 10px;
+}
+
+.btn-floating {
+    color: #fff;
+    padding: 0;
+    margin: 3px;
+    width: 55.5px; height: 55.5px;
+    display: inline-block;
+    outline: 0;
+    border: none;
+    text-decoration: none;
+    background: #0054FF;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+.btn-floating:hover {
+    background: #0030DB;
+}
+.btn-floating div {
+    font-size: 1.8em;
+    padding: 0;
+    margin: .22em 0 0 0;
+}
+
+.icon {
+    width: 30px;
+} .icon.home {
+    position: absolute; bottom: 88px; right: 15px;
+} .icon.contact {
+    position: absolute; bottom: 20px; right: 15px;
 }

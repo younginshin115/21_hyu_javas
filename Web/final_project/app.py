@@ -35,6 +35,7 @@ cwc = c_wordcloud.c_wordcloud()
 
 @app.route('/')
 def main_chatbot():
+    time.sleep(1)
     if mp.active_children():
         for i in mp.active_children():
             i.terminate()

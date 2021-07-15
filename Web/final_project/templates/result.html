@@ -1,10 +1,11 @@
 {% extends 'layout.html' %}
-
 {% block content %}
-<h1>{{ data_list }}</h1>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ajax-cross-origin.min.js') }}"></script>
+<div class="header"><img class="icon_result" src="{{ url_for('static', filename='logo_new_white.png') }}" /></div>
 <div class="wrap">
+    <br>
+    <h1>{{ data_list }}</h1>
     <div class="chat_table_div">
         <table class="chat_table">
             <thead>
@@ -69,6 +70,12 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+
+<div class="float_btn">
+<a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" /></a><br>
+<a href='/' class='btn-floating'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" /></a>
 </div>
 <script>
     var abuse_num = 0;
