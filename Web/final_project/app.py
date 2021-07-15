@@ -54,7 +54,7 @@ def main_chatbot():
 
 @app.route('/chatcategory', methods=['POST'])
 def chat_category():
-    category_val = request.form.get('categories')
+    category_val = request.form.get('sources')
     url_val = request.form.get('searchbar')
     if url_val:
         if category_val == 'youtube':
