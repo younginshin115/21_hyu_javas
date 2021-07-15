@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
 <h1>{{ data_list }}</h1>
@@ -40,7 +40,7 @@
         <tbody>
             <tr>
                 <td class="chat_td">
-                    <img crossorigin="Anonymous" src="/static/wordcloud.png" class="word_cloud" onerror="this.src='/static/wordcloud.png'" />
+                    <img crossOrigin="anonymous" src="/static/wordcloud.png" class="word_cloud" onerror="this.src='/static/wordcloud.png'" />
                 </td>
             </tr>
             <tr>
@@ -78,13 +78,13 @@
         url: '/update',
         type: 'POST',
         success: function(response) {
-            $( ".chat_div.1" ).append( "<p>"+response['msg']['user_name']+" : "+response['msg']['chat_text']+"</p>" );
+            $( ".chat_div.1" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
             const abuse_result = $.trim(response['msg']['abuse']);
             if ( abuse_result > 0.4 ) {
-                $( ".chat_div.2" ).append( "<p>"+response['msg']['user_name']+" : <i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
+                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp<i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
                 abuse_num++;
             } else {
-                $( ".chat_div.2" ).append( "<p>"+response['msg']['user_name']+" : "+response['msg']['chat_text']+"</p>" );
+                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
             }
             const $messageTextBox = $('.chat_div');
             $messageTextBox.scrollTop($messageTextBox[0].scrollHeight);
@@ -106,7 +106,7 @@
                 $( ".small_table.2" ).css( "background-color", "#F6F6F6" );
             }
 
-            $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] + '?' + new Date().getTime() );
+            $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
 
         },
         error: function(error) {
