@@ -1,1 +1,5 @@
-Dockerfiles/data
+./Dockerfiles/data/db
+Dockerfiles/flaskdocker2
+Docker
+web
+*.swp
