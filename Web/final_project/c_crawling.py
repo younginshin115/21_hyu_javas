@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from pytchat import LiveChat
 import pafy
 
@@ -5,10 +7,11 @@ import socket
 import re
 from datetime import datetime as dt
 
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
 import c_kafka
 import c_token
-
-import random # 삭제 필요
 
 ck = c_kafka.c_kafka()
 
@@ -83,6 +86,38 @@ class c_crawling():
                 ck.To_kafka(topic, d)
                 num += 1
 
+    def n_shoppinglive_to_kafka(self, url_id, topic):
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
+        num = 0
+        url = 'https://shoppinglive.naver.com/lives/' + url_id
+
+        try:
+            driver.get(url)
+            pop_list = []
+            while True:
+                n_chat_id = driver.find_elements_by_class_name('Comment_id_3pR4u')
+                n_chat_text = driver.find_elements_by_class_name('Comment_comment_2d0tc')
+                for i in range(len(n_chat_text)):
+                    c_time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
+                    try:
+                        if n_chat_id[i].text:
+                            chat_text = (n_chat_id[i].text, n_chat_text[i].text)
+                            if chat_text in pop_list:
+                                pass
+                            else:
+                                pop_list.append(chat_text)
+                                d = self.c_json(url_id, n_chat_id[i].text, num, n_chat_text[i].text, c_time)
+                                ck.To_kafka(topic, d)
+                                num += 1
+                    except:
+                        pass
+        finally:
+            driver.quit()
+
+
     def c_json(self, video_id, user_name, chat_id, chat_text, chat_time):
         ct = c_token.c_token()
 
@@ -91,13 +126,7 @@ class c_crawling():
             "user_name": user_name,
             "chat_id": chat_id,
             "chat_text": chat_text,
-            "modified_text": ct.only_korean(chat_text),
-            "h_token": ct.m_tokenize(chat_text),
-            "j_token": ct.c_tokenize(chat_text),
-            "hj_token": ct.cm_tokenize(chat_text),
             "noun_token": ct.noun_tokenize(chat_text),
-            "chat_time": chat_time,
-            "emotion": round(random.random(), 1), # 기능 테스트옹 삭제 필요
-            "abuse": round(random.random(), 1) # 기능 테스트용 삭제 필요
+            "chat_time": chat_time
         }
         return tmp_json

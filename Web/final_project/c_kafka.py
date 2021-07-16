@@ -5,8 +5,8 @@ from kafka import KafkaProducer
 from json import dumps
 from json import loads
 
-kafka_url = "23.96.54.46:9092"
-
+# kafka_url = "23.96.54.46:9092" # Azure 1
+kafka_url = "52.149.146.199:9092" # Azure 2
 class c_kafka:
     def From_kafka(self, topic):
         consumer = KafkaConsumer(
