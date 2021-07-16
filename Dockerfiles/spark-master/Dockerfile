@@ -1,5 +1,5 @@
-FROM openjdk:8-alpine
-COPY --from=nvidia/cuda:11.3.1-devel-ubuntu18.04 / /
+FROM nvidia/cuda:11.0-devel-ubuntu18.04
+COPY --from=openjdk:8-alpine / /
 COPY --from=python:3.9.5 / /
 ARG SPARK_VERSION=3.1.2
 ARG HADOOP_VERSION=3.2
@@ -34,7 +34,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends -f \
     nvidia-modprobe
 
-ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/cuda-11.3/lib64/stubs:/usr/local/cuda-11.3/compat
+ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/cuda-11.0/lib64/stubs:/usr/local/cuda-11.0/compat
 
 RUN chmod +x /start-master.sh
 RUN chmod +x /start-worker.sh
