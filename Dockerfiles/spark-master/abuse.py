@@ -7,6 +7,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
 os.environ['TF_CPP_MIN_LOG_LEVEL']='3'
+import tensorflow as tf
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=config)
 
 loaded_model = load_model('/spark/slang_model_0.1.h5')
 

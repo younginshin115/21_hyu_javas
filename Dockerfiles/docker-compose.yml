@@ -14,12 +14,8 @@ services:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
-      - "NVIDIA_VISIBLE_DEVICES=all"
     command: "/start-master.sh"
-    devices:
-      - /dev/nvidia0
-      - /dev/nvidiactl
-      - /dev/nvidia-uvm
+    runtime: nvidia
 
   spark-worker:
     image: merolhack/spark:latest
