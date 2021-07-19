@@ -15,12 +15,8 @@ services:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
-      - "NVIDIA_VISIBLE_DEVICES=all"
     command: "/start-master.sh"
-    devices:
-      - /dev/nvidia0
-      - /dev/nvidiactl
-      - /dev/nvidia-uvm
+    runtime: nvidia
 
   spark-worker:
     image: merolhack/spark:latest
@@ -35,6 +31,11 @@ services:
 
   kafka:
     image: kafka:latest
+    container_name: kafka
+    hostname: kafka
+    build:
+      context: kafkadocker/
+      dockerfile: Dockerfile
     ports:
       - "9092:9092"
     environment:
@@ -47,33 +48,26 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  mogodb:
+  mongodb:
     image: mongo:latest
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: cjo
-      MONGO_INITDB_ROOT_PASSWORD: cjo
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONOG_INITDB_DATABASE: mymodel
     volumes:
-      - type: bind
-        source: ./data/db
-        target: /data/db
+      - ./data/db:/data/db
+    command: [--auth]
 
   elasticsearch:
     container_name: elasticsearch
     hostname: elasticsearch
     build:
       context: elasticsearch/
-      args:
-        ELK_VERSION: $ELK_VERSION
     volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml
-        read_only: true
-      - type: volume
-        source: ./elasticsearch
-        target: /usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -87,8 +81,6 @@ services:
     hostname: logstash
     build:
       context: logstash/
-      args:
-        ELK_VERSION: $ELK_VERSION
     volumes:
       - type: bind
         source: ./logstash/config/logstash.yml
@@ -104,8 +96,6 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    depends_on:
-      - elasticsearch
 
   flask:
     container_name: flask
@@ -120,4 +110,3 @@ services:
     build: ./nginxdocker
     ports:
       - "5307:5307"
-
