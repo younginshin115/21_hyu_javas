@@ -14,7 +14,10 @@ from glob import glob
 import c_crawling
 import c_kafka
 import c_wordcloud
+
 import time
+import datetime
+from pytz import timezone
 
 import re
 from flask_cors import CORS
@@ -114,7 +117,8 @@ def update():
         num += 1
         image_name = message.value['video_id'] + "_" + str(num - 5).zfill(4) + ".png"
         print({"msg": message.value})
-        return jsonify({"msg": message.value, "image_name": image_name})
+        time_data = datetime.datetime.now(timezone('Asia/Seoul')).astimezone().timestamp() * 1000
+        return jsonify({"msg": message.value, "image_name": image_name, "time_data": time_data})
 
 import logging.config
 import yaml

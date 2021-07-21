@@ -88,7 +88,12 @@ class c_crawling():
 
     def n_shoppinglive_to_kafka(self, url_id, topic):
         options = webdriver.ChromeOptions()
-        options.add_argument("headless")
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--remote-debugging-port=9222")
+        options.add_argument("--user-data-dir=/data")
+        options.add_argument("--disable-gpu")
         driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
         num = 0

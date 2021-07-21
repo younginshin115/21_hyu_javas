@@ -4,8 +4,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ajax-cross-origin.min.js') }}"></script>
 <div class="header"><img class="icon_result" src="{{ url_for('static', filename='logo_new_white.png') }}" /></div>
 <div class="wrap">
-    <br>
-    <h1>{{ data_list }}</h1>
+    <h2 style="text-align:left; margin: 10px"><font size="5px"> {{ data_list }} </font></h2>
     <div class="chat_table_div">
         <table class="chat_table">
             <thead>
@@ -70,17 +69,29 @@
             </tr>
         </tbody>
     </table>
+    <figure>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container-fluid" id="data-container"></div>
+            </div>
+        </div>
+    </figure>
 </div>
-
 
 <div class="float_btn">
-<a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" /></a><br>
-<a href='/' class='btn-floating'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" /></a>
+<a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" title="돌아가기" /></a><br>
+<a href='/' class='btn-floating'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
 </div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts-more.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/series-label.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/exporting.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/export-data.js') }}"></script>
 <script>
     var abuse_num = 0;
     var emotion_num = 0;
     var replicaCheckArray = [];
+    var chart;
     setInterval(function(){$.ajax({
         crossOrigin: true,
         url: '/update',
@@ -117,12 +128,62 @@
                 }
 
                 $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
+
+                var series = chart.series[0],
+                    shift = series.data.length > 20;
+
+                chart.series[0].addPoint([response['time_data'], emotion_num], true, shift);
             }
         },
         error: function(error) {
             console.log(error);
         }
     })}, 1000);
+
+$(document).ready(function() {
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'data-container',
+            defaultSeriesType: 'spline',
+            events: {
+                load: function() {
+                    chart = this;
+                    setInterval;
+                }
+            }
+        },
+        title: {
+            text: '채팅창 분위기'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150,
+            maxZoom: 20 * 1000
+        },
+        yAxis: {
+            minPadding: 0.2,
+            maxPadding: 0.2,
+            title: {
+                text: '긍부정 수치',
+                margin: 80
+            }
+        },
+        time: {
+            useUTC: false
+        },
+        series: [{
+            name: '긍부정지수',
+            color: '#8C8C8C',
+            data: [],
+            zones: [{
+                value: 0,
+                color: '#FF007F'
+            }, {
+                color: '#0054FF'
+            }]
+        }]
+    });
+});
 
 </script>
 {% endblock %}
