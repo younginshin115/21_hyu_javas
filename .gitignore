@@ -1,1 +1,5 @@
-Dockerfiles/data
+Dockerfiles/data/
+Dockerfiles/elasticsearch/nodes/
+Docker
+web
+*.swp
