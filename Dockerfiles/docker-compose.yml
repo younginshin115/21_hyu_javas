@@ -14,9 +14,9 @@ services:
     environment:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
-      - "SPARK_MASTER_WEBUI_PORT=8080"
+#      - "SPARK_MASTER_WEBUI_PORT=8080"
     command: "/start-master.sh"
-    runtime: nvidia
+#    runtime: nvidia
 
   spark-worker:
     image: merolhack/spark:latest
