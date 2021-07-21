@@ -14,7 +14,10 @@ from glob import glob
 import c_crawling
 import c_kafka
 import c_wordcloud
+
 import time
+import datetime
+from pytz import timezone
 
 import re
 from flask_cors import CORS
@@ -47,8 +50,6 @@ def main_chatbot():
 
     global wordcloud_lst
     wordcloud_lst = ['시작']
-    global replica_list
-    replica_list = []
     global num
     num = 0
     return render_template('index.html')
@@ -103,25 +104,21 @@ def chat_category():
 
 num = 1
 wordcloud_lst = ['시작']
-replica_list = []
 @app.route('/update', methods=['POST'])
 @cross_origin()
 def update():
     global num
     consumer = ck.From_kafka(kafka_topic[1])
     for message in consumer:
-        if message.value['chat_id'] in replica_list:
-            pass
-        else:
-            replica_list.append(message.value['chat_id'])
-            wordcloud_lst.extend(message.value['noun_token'])
-            if len(wordcloud_lst) > 200:
-                del wordcloud_lst[:len(wordcloud_lst) - 200]
-            cwc.woco_pic(wordcloud_lst, num, message.value['video_id'])
-            num += 1
-            image_name = message.value['video_id'] + "_" + str(num - 5).zfill(4) + ".png"
-            print({"msg": message.value})
-            return jsonify({"msg": message.value, "image_name": image_name})
+        wordcloud_lst.extend(message.value['noun_token'])
+        if len(wordcloud_lst) > 200:
+            del wordcloud_lst[:len(wordcloud_lst) - 200]
+        cwc.woco_pic(wordcloud_lst, num, message.value['video_id'])
+        num += 1
+        image_name = message.value['video_id'] + "_" + str(num - 5).zfill(4) + ".png"
+        print({"msg": message.value})
+        time_data = datetime.datetime.now(timezone('Asia/Seoul')).astimezone().timestamp() * 1000
+        return jsonify({"msg": message.value, "image_name": image_name, "time_data": time_data})
 
 import logging.config
 import yaml
