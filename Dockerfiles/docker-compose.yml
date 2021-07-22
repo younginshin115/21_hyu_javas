@@ -159,7 +159,7 @@ services:
       - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
-
+#airflow id:user pw:bitnami
   airflow:
     image: docker.io/bitnami/airflow:2-debian-10
     environment:
