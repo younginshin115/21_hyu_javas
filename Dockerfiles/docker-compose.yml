@@ -104,10 +104,9 @@ services:
     build: ./flaskdocker
     expose:
       - 5005
-    environment:
-      - "NVIDIA_VISIBLE_DEVICES=0"
-    command: "/start-master.sh"
-    runtime: nvidia
+#    environment: 
+#      - "NVIDIA_VISIBLE_DEVICES=0"
+#    runtime: nvidia
 
   nginx:
     container_name: nginx
@@ -159,7 +158,7 @@ services:
       - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
-
+#airflow id:user pw:bitnami
   airflow:
     image: docker.io/bitnami/airflow:2-debian-10
     environment:
@@ -175,7 +174,7 @@ services:
       - '8083:8080'
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
-  volumes:
+volumes:
   postgresql_data:
     driver: local
   redis_data:
