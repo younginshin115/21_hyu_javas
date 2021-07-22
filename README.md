@@ -57,7 +57,7 @@ ML: Keras, CNN-LSTM
 
 # Usage
 
-## Ubuntu에서 실행
+## Ubuntu에서 컨테이너 실행
 1. docker-compose.yml 파일이 있는 Dockerfiles 디렉토리로 이동
 
 2. 아래 명령어를 입력하면 docker-compose 개발 환경 실행
@@ -76,7 +76,7 @@ docker exec -it [컨테이너 이름 또는 아이디] /bin/bash
 ```
 <br>
 
-## 윈도우 환경에서 실행
+## 윈도우 환경에서 컨테이너 실행
 1. WSL2 설치(참고 링크: https://www.44bits.io/ko/post/wsl2-install-and-basic-usage)
 
 2. 윈도우에 Docker Desktop 설치(설치 링크: https://www.docker.com/products/docker-desktop)
@@ -106,3 +106,19 @@ docker exec -it [컨테이너 이름 또는 아이디] /bin/bash
 ```
 
 !!! WSL2에서 CUDA를 사용하려면 Insider Program에 가입하여 개발자 버전을 사용하거나 windows11을 사용해야한다고 합니다. 많은 프로그램과 호환이 되지 않는 개발자 버전을 사용하는것 보다 로컬에서 개발할 때 Azure에 설치된 버전에 연결해서 사용하는 편이 더 나을 것 같습니다. (참고 링크: https://docs.nvidia.com/cuda/wsl-user-guide/index.html)
+
+<br><br>
+
+## 컨테이너가 실행되어있을 경우 서비스 실행
+
+1. 스파크 컨테이너를 열어서 아래 명령어로 pyspark를 실행한다
+```
+bin/pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
+```
+
+
+2. pipeline/pyspark.py 파일 안의 코드를 붙여 넣어 ML 분석을 실행한다
+
+3. IP:5307로 접속한다(포트가 열려있지 않은 경우 포트 열어주기)
+
+4. 원하는 채널과 URL을 입력하여 서비스를 실행한다
