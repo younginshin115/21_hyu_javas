@@ -103,9 +103,6 @@ services:
     build: ./flaskdocker
     expose:
       - 5005
-    environment:
-      - "NVIDIA_VISIBLE_DEVICES=0"
-    command: "/start-master.sh"
     runtime: nvidia
 
   nginx:
