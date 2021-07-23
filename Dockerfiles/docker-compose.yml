@@ -1,5 +1,4 @@
 version: "3.2"
-# 0716
 services:
   spark-master:
     image: merolhack/spark:latest
@@ -15,7 +14,7 @@ services:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
-      - "NVIDIA_VISIBLE_DEVICES=0"
+#      - "NVIDIA_VISIBLE_DEVICES=0"
     command: "/start-master.sh"
 #    runtime: nvidia
 
