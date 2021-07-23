@@ -80,8 +80,35 @@
 
 <div class="float_btn">
 <a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" title="돌아가기" /></a><br>
-<a href='/' class='btn-floating'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
+<a href="javascript:openModal('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
 </div>
+
+<div id="modal"></div>
+    <div class="modal-con modal_question">
+        <a href="javascript:;" class="close">x</a>
+        <div class="con">
+            <p class="title"><b>문의하기</b></p>
+            <form action="/my-handling-form-page" method="post" class="question_form">
+                <div>
+                    <label for="name">Name</label>
+                    <input class="question input" type="text" id="name" />
+                </div>
+                <div>
+                    <label for="mail">E-mail</label>
+                    <input class="question input" type="email" id="mail" />
+                </div>
+                <div>
+                    <label for="msg">Message</label>
+                    <textarea class="question textarea" id="msg"></textarea>
+                </div>
+
+                <div class="question_button" >
+                    <button type="submit">문의하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts-more.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/series-label.js') }}"></script>
@@ -96,6 +123,7 @@
         crossOrigin: true,
         url: '/update',
         type: 'POST',
+        timeout: 60000,
         success: function(response) {
             if (jQuery.inArray(response['msg']['chat_id'], replicaCheckArray) == -1) {
                 replicaCheckArray.push(response['msg']['chat_id']);
@@ -135,8 +163,13 @@
                 chart.series[0].addPoint([response['time_data'], emotion_num], true, shift);
             }
         },
-        error: function(error) {
-            console.log(error);
+        error: function(xmlhttprequest, textstatus, message) {
+            if (textstatus==="timeout") {
+                alert("연결 시간이 초과되었습니다. 다시 시도하세요.");
+                history.go(-1);
+            } else {
+                console.log(textstatus);
+            }
         }
     })}, 1000);
 
@@ -183,6 +216,17 @@ $(document).ready(function() {
             }]
         }]
     });
+});
+
+function openModal(modalname) {
+    document.get
+    $("#modal").fadeIn(300);
+    $("."+modalname).fadeIn(300);
+}
+
+$("#modal, .close").on('click', function() {
+    $("#modal").fadeOut(300);
+    $(".modal-con").fadeOut(300);
 });
 
 </script>
