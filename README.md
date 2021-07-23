@@ -24,6 +24,10 @@
 |맹광국|ggmaeng@gmail.com|
 |손덕기|deokki9880@gmail.com|
 |장지연|delayeon9934@naver.com|
+
+# 현재 배포되고 있는 서비스 URL
+http://52.149.146.199:5307
+
 <br>
 # Environment
 
