@@ -1,4 +1,4 @@
 Dockerfiles/data/
-Dockerfiles/elasticsearch/nodes/0/
+Dockerfiles/elasticsearch/nodes/
 Docker
 *.swp
