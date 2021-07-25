@@ -53,12 +53,12 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONOG_INITDB_DATABASE: mymodel
+      - "MONGO_INITDB_ROOT_USERNAME=root"
+      - "MONGO_INITDB_ROOT_PASSWORD=root"
+      - "MONOG_INITDB_DATABASE=mymodel"
     volumes:
       - ./data/db:/data/db
-    command: [--auth]
+    command: mongod --auth
 
   elasticsearch:
     container_name: elasticsearch
