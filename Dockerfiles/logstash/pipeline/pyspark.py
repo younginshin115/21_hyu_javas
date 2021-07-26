@@ -1,5 +1,21 @@
+import findspark
+findspark.init()
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+from pyspark import SparkConf
+from pyspark import SparkContext
+from pyspark.sql import SparkSession
+
+conf = SparkConf()
+conf.setMaster('spark://spark-master:7077')
+conf.setAppName('spark-basic')
+sc = SparkContext(conf=conf)
+
+spark = SparkSession \
+.builder \
+.appName("kafka-to-spark") \
+.config("spark.some.config.option", "some-value") \
+.getOrCreate()
 
 sc.addFile("/spark/abuse.py")
 import abuse
