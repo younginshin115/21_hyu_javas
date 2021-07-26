@@ -4,8 +4,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ajax-cross-origin.min.js') }}"></script>
 <div class="header"><img class="icon_result" src="{{ url_for('static', filename='logo_new_white.png') }}" /></div>
 <div class="wrap">
-    <br>
-    <h1>{{ data_list }}</h1>
+    <h2 style="text-align:left; margin: 10px"><font size="5px"> {{ data_list }} </font></h2>
     <div class="chat_table_div">
         <table class="chat_table">
             <thead>
@@ -70,56 +69,165 @@
             </tr>
         </tbody>
     </table>
+    <figure>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container-fluid" id="data-container"></div>
+            </div>
+        </div>
+    </figure>
 </div>
-
 
 <div class="float_btn">
-<a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" /></a><br>
-<a href='/' class='btn-floating'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" /></a>
+<a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" title="돌아가기" /></a><br>
+<a href="javascript:openModal('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
 </div>
+
+<div id="modal"></div>
+    <div class="modal-con modal_question">
+        <a href="javascript:;" class="close">x</a>
+        <div class="con">
+            <p class="title"><b>문의하기</b></p>
+            <form action="/my-handling-form-page" method="post" class="question_form">
+                <div>
+                    <label for="name">Name</label>
+                    <input class="question input" type="text" id="name" />
+                </div>
+                <div>
+                    <label for="mail">E-mail</label>
+                    <input class="question input" type="email" id="mail" />
+                </div>
+                <div>
+                    <label for="msg">Message</label>
+                    <textarea class="question textarea" id="msg"></textarea>
+                </div>
+
+                <div class="question_button" >
+                    <button type="submit">문의하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts-more.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/series-label.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/exporting.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/export-data.js') }}"></script>
 <script>
     var abuse_num = 0;
     var emotion_num = 0;
+    var replicaCheckArray = [];
+    var chart;
     setInterval(function(){$.ajax({
         crossOrigin: true,
         url: '/update',
         type: 'POST',
+        timeout: 60000,
         success: function(response) {
-            $( ".chat_div.1" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
-            const abuse_result = $.trim(response['msg']['abuse']);
-            if ( abuse_result > 0.4 ) {
-                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp<i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
-                abuse_num++;
-            } else {
-                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
+            if (jQuery.inArray(response['msg']['chat_id'], replicaCheckArray) == -1) {
+                replicaCheckArray.push(response['msg']['chat_id']);
+                $( ".chat_div.1" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
+                const abuse_result = $.trim(response['msg']['abuse']);
+                if ( abuse_result > 0.4 ) {
+                    $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp<i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
+                    abuse_num++;
+                } else {
+                    $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
+                }
+                const $messageTextBox = $('.chat_div');
+                $messageTextBox.scrollTop($messageTextBox[0].scrollHeight);
+                $( ".abuse_div" ).text( abuse_num );
+
+                const emotion_result = $.trim(response['msg']['emotion']);
+                if ( emotion_result > 0.4 ) {
+                    emotion_num++;
+                } else {
+                    emotion_num--;
+                }
+                $( ".emotion_div" ).text( emotion_num );
+
+                if ( emotion_num < 0 ) {
+                    $( ".small_table.2" ).css( "background-color", "#FFA7A7" );
+                } else if ( emotion_num > 0 ) {
+                    $( ".small_table.2" ).css( "background-color", "#B2CCFF" );
+                } else {
+                    $( ".small_table.2" ).css( "background-color", "#F6F6F6" );
+                }
+
+                $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
+
+                var series = chart.series[0],
+                    shift = series.data.length > 20;
+
+                chart.series[0].addPoint([response['time_data'], emotion_num], true, shift);
             }
-            const $messageTextBox = $('.chat_div');
-            $messageTextBox.scrollTop($messageTextBox[0].scrollHeight);
-            $( ".abuse_div" ).text( abuse_num );
-
-            const emotion_result = $.trim(response['msg']['emotion']);
-            if ( emotion_result > 0.4 ) {
-                emotion_num++;
-            } else {
-                emotion_num--;
-            }
-            $( ".emotion_div" ).text( emotion_num );
-
-            if ( emotion_num < 0 ) {
-                $( ".small_table.2" ).css( "background-color", "#FFA7A7" );
-            } else if ( emotion_num > 0 ) {
-                $( ".small_table.2" ).css( "background-color", "#B2CCFF" );
-            } else {
-                $( ".small_table.2" ).css( "background-color", "#F6F6F6" );
-            }
-
-            $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
-
         },
-        error: function(error) {
-            console.log(error);
+        error: function(xmlhttprequest, textstatus, message) {
+            if (textstatus==="timeout") {
+                alert("연결 시간이 초과되었습니다. 다시 시도하세요.");
+                history.go(-1);
+            } else {
+                console.log(textstatus);
+            }
         }
     })}, 1000);
+
+$(document).ready(function() {
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'data-container',
+            defaultSeriesType: 'spline',
+            events: {
+                load: function() {
+                    chart = this;
+                    setInterval;
+                }
+            }
+        },
+        title: {
+            text: '채팅창 분위기'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150,
+            maxZoom: 20 * 1000
+        },
+        yAxis: {
+            minPadding: 0.2,
+            maxPadding: 0.2,
+            title: {
+                text: '긍부정 수치',
+                margin: 80
+            }
+        },
+        time: {
+            useUTC: false
+        },
+        series: [{
+            name: '긍부정지수',
+            color: '#8C8C8C',
+            data: [],
+            zones: [{
+                value: 0,
+                color: '#FF007F'
+            }, {
+                color: '#0054FF'
+            }]
+        }]
+    });
+});
+
+function openModal(modalname) {
+    document.get
+    $("#modal").fadeIn(300);
+    $("."+modalname).fadeIn(300);
+}
+
+$("#modal, .close").on('click', function() {
+    $("#modal").fadeOut(300);
+    $(".modal-con").fadeOut(300);
+});
 
 </script>
 {% endblock %}

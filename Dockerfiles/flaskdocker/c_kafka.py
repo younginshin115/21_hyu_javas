@@ -6,7 +6,7 @@ from json import dumps
 from json import loads
 
 # kafka_url = "23.96.54.46:9092" # Azure 1
-kafka_url = "kafka:9092" # Azure 2
+kafka_url = "52.149.146.199:9092" # Azure 2
 class c_kafka:
     def From_kafka(self, topic):
         consumer = KafkaConsumer(
@@ -15,7 +15,6 @@ class c_kafka:
             bootstrap_servers=[kafka_url],
             enable_auto_commit=True,
             auto_offset_reset='latest',
-            #heartbeat_interval_ms=8000,
             value_deserializer=lambda m: loads(m))
         return consumer
 

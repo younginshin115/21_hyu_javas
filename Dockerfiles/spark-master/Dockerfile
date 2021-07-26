@@ -6,12 +6,12 @@ ARG SPARK_VERSION=3.1.2
 ARG HADOOP_VERSION=3.2
 ARG PYTHON_VERSION=3.8.3
 
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get -y update && apt-get -y upgrade && \
+    apt-get -y install --no-install-recommends \
     wget tar bash curl vim \
     build-essential checkinstall \
     libreadline-gplv2-dev libncursesw5-dev libssl-dev \
-    libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev \
+    libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev liblzma-dev \
     openjdk-8-jdk \
     gcc+
 
