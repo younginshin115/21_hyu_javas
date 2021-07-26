@@ -115,9 +115,9 @@ services:
       - "5307:5307"
 
   postgresql:
-    image: 'docker.io/bitnami/postgresql:10-debian-10'
+    image: docker.io/bitnami/postgresql:10-debian-10
     volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - ./postgresql_data:/bitnami/postgresql
     environment:
       - POSTGRESQL_DATABASE=bitnami_airflow
       - POSTGRESQL_USERNAME=bn_airflow
@@ -126,7 +126,7 @@ services:
   redis:
     image: docker.io/bitnami/redis:6.0-debian-10
     volumes:
-      - 'redis_data:/bitnami'
+      - ./redis_data:/bitnami
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       
@@ -181,7 +181,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana
     depends_on:
       - influxdb
 
@@ -192,7 +192,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - ./influxdb_data:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=grafana
       - INFLUXDB_USER=grafana
@@ -200,12 +200,3 @@ services:
       - INFLUXDB_ADMIN_ENABLED=true
       - INFLUXDB_ADMIN_USER=admin
       - INFLUXDB_ADMIN_PASSWORD=password
-  
-volumes:
-  postgresql_data:
-    driver: local
-  redis_data:
-    driver: local
-  grafana_data:
-  influxdb_data: 
-
