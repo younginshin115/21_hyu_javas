@@ -1,5 +1,3 @@
-import findspark
-findspark.init()
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark import SparkConf
