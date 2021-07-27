@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class KafkaToIfDB {
+public class KafkaToInfluxDB {
 
     public static final String KAFKA_BROKER = "52.149.146.199:9092";
     public static final String KAFKA_TOPIC1 = "inchat";
