@@ -138,3 +138,9 @@ docker swarm init
 ```
 docker-compose up -d
 ```
+
+## 서버 종료
+아래 명령어로 서버를 종료한다
+```
+docker-compose down
+```
