@@ -32,6 +32,8 @@
 |javas(챗봇웹서비스)|http://52.149.146.199:5307|-|
 |airflow|http://52.149.146.199:8083/|아이디: user<br>비밀번호: bitnami|
 |grafana|http://52.149.146.199:3000/|아이디: admin<br>비밀번호: admin|
+|burrow-api|http://52.149.146.199:7000/v3/kafka||
+|spark job api|http://52.149.146.199:4040/api/v1/applications||
 
 <br>
 

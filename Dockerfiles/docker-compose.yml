@@ -8,27 +8,27 @@ services:
       context: spark-master/
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-      - "7077:7077"
-      - "4040:4040"
-      - "18081:18080"
+      - 8080:8080
+      - 7077:7077
+      - 4040:4040
+      - 18081:18080
     environment:
-      - "SPARK_LOCAL_IP=spark-master"
-      - "SPARK_MASTER_PORT=7077"
-      - "SPARK_MASTER_WEBUI_PORT=8080"
-#      - "NVIDIA_VISIBLE_DEVICES=0"
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+      - NVIDIA_VISIBLE_DEVICES=0
     command: "/start-master.sh"
-#    runtime: nvidia
+    runtime: "nvidia"
 
   spark-worker:
     image: merolhack/spark:latest
     depends_on:
       - spark-master
     ports:
-      - "8080"
+      - 8080
     environment:
-      - "SPARK_MASTER=spark://spark-master:7077"
-      - "SPARK_WORKER_WEBUI_PORT=8080"
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=8080
     command: "/start-worker.sh"
 
   kafka:
@@ -39,7 +39,8 @@ services:
       context: kafkadocker/
       dockerfile: Dockerfile
     ports:
-      - "9092:9092"
+      - 9092:9092
+      - 2181:2181
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
@@ -47,17 +48,19 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CREATE_TOPICS: "test123:1:1,inchat:1:1,outchat:1:1"
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
   mongodb:
     image: mongo:latest
     ports:
-      - "27017:27017"
+      - 27017:27017
     environment:
-      - "MONGO_INITDB_ROOT_USERNAME=root"
-      - "MONGO_INITDB_ROOT_PASSWORD=root"
-      - "MONOG_INITDB_DATABASE=mymodel"
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONOG_INITDB_DATABASE=mymodel
     volumes:
       - ./data/db:/data/db
     command: mongod --auth
@@ -71,8 +74,8 @@ services:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elasticsearch:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - 9200:9200
+      - 9300:9300
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       ELASTIC_PASSWORD: changeme
@@ -93,9 +96,9 @@ services:
         target: /usr/share/logstash/pipeline
         read_only: false
     ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
+      - 5000:5000/tcp
+      - 5000:5000/udp
+      - 9600:9600
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
 
@@ -105,16 +108,16 @@ services:
     build: ./flaskdocker
     expose:
       - 5005
-#    environment: 
-#      - "NVIDIA_VISIBLE_DEVICES=0"
-#    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=0
+    runtime: nvidia
 
   nginx:
     container_name: nginx
     restart: always
     build: ./nginxdocker
     ports:
-      - "5307:5307"
+      - 5307:5307
 
   postgresql:
     image: docker.io/bitnami/postgresql:10-debian-10
@@ -159,7 +162,7 @@ services:
       - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
-#airflow id:user pw:bitnami
+
   airflow:
     image: docker.io/bitnami/airflow:2-debian-10
     environment:
@@ -172,21 +175,17 @@ services:
       - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=Asia/Seoul
       - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
     ports:
-      - '8083:8080'
+      - 8083:8080
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
       
   grafana:
     image: grafana/grafana
     container_name: grafana
-    restart: always
     ports:
       - 3000:3000
     volumes:
       - ./grafana_data:/var/lib/grafana
-    environment: 
-      - GF_INSTALL_PLUGINS=https://github.com/valiton/grafana-mongodb-atlas-datasource/releases/download/v3.0.0/valiton-mongodb-atlas-datasource.zip;valiton-mongodb-atlas-datasource
-      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=valiton-mongodbatlas-datasource
     depends_on:
       - influxdb
 
@@ -221,3 +220,14 @@ services:
       - influxdb
     deploy:
       mode: global
+
+  burrow:
+    build: ./burrowdocker
+    volumes:
+      - ./burrowdocker/docker-config:/etc/burrow/
+      - ./burrowdocker/tmp:/var/tmp/burrow
+    ports:
+      - 7000:7000
+    depends_on:
+      - kafka
+    restart: always
