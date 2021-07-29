@@ -10,6 +10,8 @@ services:
     ports:
       - "8080:8080"
       - "7077:7077"
+      - "4040:4040"
+      - "18081:18080"
     environment:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
