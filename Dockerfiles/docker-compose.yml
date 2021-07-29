@@ -5,23 +5,27 @@ services:
     container_name: spark-master
     hostname: spark-master
     build:
-      context: .
+      context: spark-master/
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
       - "7077:7077"
+      - "4040:4040"
+      - "18081:18080"
     environment:
       - "SPARK_LOCAL_IP=spark-master"
       - "SPARK_MASTER_PORT=7077"
       - "SPARK_MASTER_WEBUI_PORT=8080"
+#      - "NVIDIA_VISIBLE_DEVICES=0"
     command: "/start-master.sh"
-  
+#    runtime: nvidia
+
   spark-worker:
     image: merolhack/spark:latest
     depends_on:
       - spark-master
     ports:
-      - 8080
+      - "8080"
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
       - "SPARK_WORKER_WEBUI_PORT=8080"
@@ -29,6 +33,11 @@ services:
 
   kafka:
     image: kafka:latest
+    container_name: kafka
+    hostname: kafka
+    build:
+      context: kafkadocker/
+      dockerfile: Dockerfile
     ports:
       - "9092:9092"
     environment:
@@ -37,23 +46,175 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "test123:1:1"
+      KAFKA_CREATE_TOPICS: "test123:1:1,inchat:1:1,outchat:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-        #  dash_app:
-        # container_name: dash_app
-        # restart: always
-        # build: ./flaskdocker/dash_app
-        # ports:
-        # - "8000:8000"
-        # command: gunicorn -w 1 -b :8000 app:server
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=root"
+      - "MONGO_INITDB_ROOT_PASSWORD=root"
+      - "MONOG_INITDB_DATABASE=mymodel"
+    volumes:
+      - ./data/db:/data/db
+    command: mongod --auth
 
-        # nginx:
-        # container_name: nginx
-        # restart: always
-        # build: ./flaskdocker/nginx
-        # ports:
-        # - "80:80"
-        # depends_on:
-        # - dash_app
+  elasticsearch:
+    container_name: elasticsearch
+    hostname: elasticsearch
+    build:
+      context: elasticsearch/
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+      discovery.type: single-node
+
+  logstash:
+    container_name: logstash
+    hostname: logstash
+    build:
+      context: logstash/
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: false
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  flask:
+    container_name: flask
+    restart: always
+    build: ./flaskdocker
+    expose:
+      - 5005
+#    environment: 
+#      - "NVIDIA_VISIBLE_DEVICES=0"
+#    runtime: nvidia
+
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginxdocker
+    ports:
+      - "5307:5307"
+
+  postgresql:
+    image: docker.io/bitnami/postgresql:10-debian-10
+    volumes:
+      - ./postgresql_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=bitnami_airflow
+      - POSTGRESQL_USERNAME=bn_airflow
+      - POSTGRESQL_PASSWORD=bitnami1
+      - ALLOW_EMPTY_PASSWORD=yes
+  redis:
+    image: docker.io/bitnami/redis:6.0-debian-10
+    volumes:
+      - ./redis_data:/bitnami
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      
+  airflow-scheduler:
+    image: docker.io/bitnami/airflow-scheduler:2-debian-10
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=bitnami1
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
+      - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=Asia/Seoul
+      - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
+    volumes:
+      - ./dags:/opt/bitnami/airflow/dags
+  
+  airflow-worker:
+    image: docker.io/bitnami/airflow-worker:2-debian-10
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=bitnami1
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
+      - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=Asia/Seoul
+      - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
+    volumes:
+      - ./dags:/opt/bitnami/airflow/dags
+#airflow id:user pw:bitnami
+  airflow:
+    image: docker.io/bitnami/airflow:2-debian-10
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=bitnami1
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_LOAD_EXAMPLES=no
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=false
+      - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=Asia/Seoul
+      - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
+    ports:
+      - '8083:8080'
+    volumes:
+      - ./dags:/opt/bitnami/airflow/dags
+      
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+
+  influxdb:
+    image: influxdb:1.8.6
+    container_name: influxdb
+    restart: always
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxdb_data:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=chatbotvi
+      - INFLUXDB_USER=adminuser
+      - INFLUXDB_USER_PASSWORD=adminuser
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+
+  cadvisor:
+    image: google/cadvisor
+    hostname: '{{.Node.Hostname}}'
+    command: -logtostderr -docker_only -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb:8086 -storage_driver_buffer_duration=5s
+    ports:
+      - 18080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - influxdb
+    deploy:
+      mode: global
