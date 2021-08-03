@@ -15,7 +15,7 @@
             this.contact_number.value = Math.random() * 100000 | 0;
             emailjs.sendForm('service_fatz8m6', 'template_zg72uch', this)
                 .then(function() {
-                    alert('이메일이 전송되었습니다!');
+                    alert('성공적으로 전송되었습니다!');
                     console.log('SUCCESS!');
                 }, function(error) {
                     console.log('FAILED...', error);
@@ -68,10 +68,26 @@
 
 <div class="float_btn">
 <a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" title="돌아가기" /></a><br>
-<a href="javascript:openModal('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
+<a href="javascript:openModal1('modal_dashboard')" class='btn-floating modal-open'><img class="icon dashboard" src="{{ url_for('static', filename='dashboard_icon.png') }}" title="대시보드" /></a><br>
+<a href="javascript:openModal2('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
 </div>
 
-<div id="modal"></div>
+
+<div class="modal 1"></div>
+    <div class="modal-con modal_dashboard" style="width: 1000px;">
+        <a href="javascript:;" class="close">x</a>
+        <div class="con" style="text-align: center;">
+            <p class="title"><b>DASHBOARD</b></p>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=22" width="800" height="120" frameborder="0"></iframe>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=21" width="800" height="120" frameborder="0"></iframe>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=23" width="800" height="90" frameborder="0"></iframe>
+            <br><br>
+            <a class="detail" href="http://52.149.146.199:3000/d/491SUgGnz/application?orgId=1&refresh=5s&from=1628007767767&to=1628008667767" target='_blank'>자세히 보기</a>
+        </div>
+    </div>
+
+
+<div class="modal 2"></div>
     <div class="modal-con modal_question">
         <a href="javascript:;" class="close">x</a>
         <div class="con">
@@ -202,14 +218,20 @@ $(document).ready(function() {
     });
 });
 
-function openModal(modalname) {
+function openModal1(modalname) {
     document.get
-    $("#modal").fadeIn(300);
+    $(".modal.1").fadeIn(300);
     $("."+modalname).fadeIn(300);
 }
 
-$("#modal, .close").on('click', function() {
-    $("#modal").fadeOut(300);
+function openModal2(modalname) {
+    document.get
+    $(".modal.2").fadeIn(300);
+    $("."+modalname).fadeIn(300);
+}
+
+$(".modal, .close").on('click', function() {
+    $(".modal").fadeOut(300);
     $(".modal-con").fadeOut(300);
 });
 
