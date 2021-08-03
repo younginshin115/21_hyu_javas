@@ -17,14 +17,14 @@ import java.util.concurrent.TimeUnit;
 
 public class KafkaToInfluxDB {
 
-    public static final String KAFKA_BROKER = "52.149.146.199:9092";
+    public static final String KAFKA_BROKER = "kafka:9092";
     public static final String KAFKA_TOPIC1 = "inchat";
     public static final String KAFKA_TOPIC2 = "outchat";
 
-    public static final String INFLUXDB_URL = "http://52.149.146.199:8086";
+    public static final String INFLUXDB_URL = "http://influxdb:8086";
     public static final String USERNAME = "grafana";
     public static final String PASSWORD = "password";
-    public static final String DBNAME = "test";
+    public static final String DBNAME = "kafkaFlink";
 
     public static void main(String[] args) throws Exception {
 
@@ -33,7 +33,7 @@ public class KafkaToInfluxDB {
         // kafka 환경설정
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", KAFKA_BROKER);
-        properties.setProperty("group.id", "test");
+        properties.setProperty("group.id", "javas");
 
         // influxDB 환경설정
         InfluxDBConfig influxDBConfig = InfluxDBConfig.builder(INFLUXDB_URL, USERNAME, PASSWORD, DBNAME)
@@ -52,7 +52,7 @@ public class KafkaToInfluxDB {
                     @Override
                     public InfluxDBPoint map(String s) throws Exception {
 
-                        String measurement = "kafkaTest";
+                        String measurement = "kafkaFlink";
                         long timestamp = System.currentTimeMillis();
 
                         HashMap<String, String> tags = new HashMap<>();
@@ -77,7 +77,7 @@ public class KafkaToInfluxDB {
                     @Override
                     public InfluxDBPoint map(String s) throws Exception {
 
-                        String measurement = "kafkaTest";
+                        String measurement = "kafkaFlink";
                         long timestamp = System.currentTimeMillis();
 
                         HashMap<String, String> tags = new HashMap<>();

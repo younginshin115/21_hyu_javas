@@ -271,3 +271,34 @@ services:
       - ./graphite_data/storage/log/webapp:/opt/graphite/storage/log/webapp
       - ./graphite_data/storage/log/supervisor:/var/log/supervisor
     restart: unless-stopped
+
+  jobmanager:
+    image: flink:1.13.1-scala_2.11-java8
+    ports:
+      - "8089:8081"
+      - "6123:6123"
+    command: standalone-job --job-classname org.example.KafkaToInfluxDB  /opt/flink/usrlib/KafkaToInfluxDB.jar
+    volumes:
+      - ./flink_lib:/opt/flink/usrlib
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.rpc.port: 8089 
+        parallelism.default: 2 
+
+  taskmanager:
+    image: flink:1.13.1-scala_2.11-java8
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    volumes:
+      - ./flink_lib:/opt/flink/usrlib
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        jobmanager.rpc.port: 8089
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 2
