@@ -2,7 +2,6 @@ Dockerfiles/data/
 Dockerfiles/elasticsearch/nodes/
 Dockerfiles/postgresql_data/
 Dockerfiles/redis_data/
-Dockerfiles/dags/
 Dockerfiles/grafana_data/
 Dockerfiles/influxdb_data/
 Dockerfiles/graphite_data/storage/
