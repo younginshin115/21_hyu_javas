@@ -198,6 +198,12 @@ services:
       - GF_RENDERING_SERVER_URL=http://grafana-image-renderer:38081/render
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=hyu.javas@gmail.com
+      - GF_SMTP_PASSWORD=hyusd2s@0614!2021
+      - GF_SMTP_FROM_ADDRESS=hyu.javas@gmail.com
+
 
   grafana-image-renderer:
     image: grafana/grafana-image-renderer:3.0.1
