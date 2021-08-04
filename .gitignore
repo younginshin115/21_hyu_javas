@@ -1,8 +1,12 @@
 Dockerfiles/data/
 Dockerfiles/elasticsearch/nodes/
-Dockerfiles/postgresql_data
-Dockerfiles/redis_data
-Dockerfiles/dags
-Dockerfiles/grafana_data
+Dockerfiles/postgresql_data/
+Dockerfiles/redis_data/
+Dockerfiles/grafana_data/
+Dockerfiles/influxdb_data/
+Dockerfiles/graphite_data/storage/
+Dockerfiles/graphite_data/statsd_config/
+Dockerfiles/dags/__pycache__/
 Docker
 *.swp
+target

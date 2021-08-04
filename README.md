@@ -25,14 +25,15 @@
 |손덕기|deokki9880@gmail.com|
 |장지연|delayeon9934@naver.com|
 
-# 현재 배포되고 있는 서비스 URL
-http://52.149.146.199:5307
 
 ### 각 서비스 접속 URL
-|서비스|주소|
-|:---|:---|
-|airflow|http://52.149.146.199:8083/|
-|grafana|http://52.149.146.199:3000/|
+|서비스|주소|계정정보|
+|:---|:---|:---|
+|javas(챗봇웹서비스)|http://52.149.146.199:5307|-|
+|airflow|http://52.149.146.199:8083/|아이디: user<br>비밀번호: bitnami|
+|grafana|http://52.149.146.199:3000/|아이디: admin<br>비밀번호: admin|
+|burrow-api|http://52.149.146.199:7000/v3/kafka||
+|spark job api|http://52.149.146.199:4040/api/v1/applications||
 
 <br>
 
@@ -116,20 +117,32 @@ docker ps -a
 docker exec -it [컨테이너 이름 또는 아이디] /bin/bash
 ```
 
-!!! WSL2에서 CUDA를 사용하려면 Insider Program에 가입하여 개발자 버전을 사용하거나 windows11을 사용해야한다고 합니다. 많은 프로그램과 호환이 되지 않는 개발자 버전을 사용하는것 보다 로컬에서 개발할 때 Azure에 설치된 버전에 연결해서 사용하는 편이 더 나을 것 같습니다. (참고 링크: https://docs.nvidia.com/cuda/wsl-user-guide/index.html)
-
 <br><br>
 
 ## 컨테이너가 실행되어있을 경우 서비스 실행
 
-1. 스파크 컨테이너를 열어서 아래 명령어로 pyspark를 실행한다
+1. 아래 명령어로 spark 컨테이너에 submit을 한다.
 ```
-bin/pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
+docker exec -it spark-master /spark/bin/spark-submit --master spark://spark-master:7077 --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /spark/streamingspark.py
 ```
 
+2. IP:5307로 접속한다(포트가 열려있지 않은 경우 포트 열어주기)
 
-2. pipeline/pyspark.py 파일 안의 코드를 붙여 넣어 ML 분석을 실행한다
+3. 원하는 채널과 URL을 입력하여 서비스를 실행한다
 
-3. IP:5307로 접속한다(포트가 열려있지 않은 경우 포트 열어주기)
+## 모니터링을 원하는 경우
+1. 도커를 swarm 모드로 변경한다
+```
+docker swarm init
+```
 
-4. 원하는 채널과 URL을 입력하여 서비스를 실행한다
+2. docker-compose up을 실행한다
+```
+docker-compose up -d
+```
+
+## 서버 종료
+아래 명령어로 서버를 종료한다
+```
+docker-compose down
+```
