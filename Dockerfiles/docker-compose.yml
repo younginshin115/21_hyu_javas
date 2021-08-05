@@ -16,9 +16,9 @@ services:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-      - NVIDIA_VISIBLE_DEVICES=0
+      # - NVIDIA_VISIBLE_DEVICES=0
     command: "/start-master.sh"
-    runtime: "nvidia"
+    # runtime: "nvidia"
 
   spark-worker:
     image: merolhack/spark:latest
@@ -111,9 +111,9 @@ services:
     build: ./flaskdocker
     expose:
       - 5005
-    environment: 
-      - NVIDIA_VISIBLE_DEVICES=0
-    runtime: nvidia
+    # environment: 
+    #   - NVIDIA_VISIBLE_DEVICES=0
+    # runtime: nvidia
 
   nginx:
     container_name: nginx
