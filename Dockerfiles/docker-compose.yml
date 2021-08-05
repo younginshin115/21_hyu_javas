@@ -20,8 +20,6 @@ services:
     command: "/start-master.sh"
     # runtime: "nvidia"
     #  - NVIDIA_VISIBLE_DEVICES=0
-    command: "/start-master.sh"
-    #runtime: "nvidia"
 
   spark-worker:
     image: merolhack/spark:latest
@@ -114,15 +112,9 @@ services:
     build: ./flaskdocker
     expose:
       - 5005
-<<<<<<< HEAD
     # environment: 
     #   - NVIDIA_VISIBLE_DEVICES=0
     # runtime: nvidia
-=======
-    #environment: 
-    #  - NVIDIA_VISIBLE_DEVICES=0
-    #runtime: nvidia
->>>>>>> 66e0b7a413d87fe3ced73e5e0e660a46887ff5c3
 
   nginx:
     container_name: nginx
