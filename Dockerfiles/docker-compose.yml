@@ -19,7 +19,6 @@ services:
       # - NVIDIA_VISIBLE_DEVICES=0
     command: "/start-master.sh"
     # runtime: "nvidia"
-    #  - NVIDIA_VISIBLE_DEVICES=0
 
   spark-worker:
     image: merolhack/spark:latest
