@@ -16,11 +16,9 @@ services:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-<<<<<<< HEAD
       # - NVIDIA_VISIBLE_DEVICES=0
     command: "/start-master.sh"
     # runtime: "nvidia"
-=======
     #  - NVIDIA_VISIBLE_DEVICES=0
     command: "/start-master.sh"
     #runtime: "nvidia"
