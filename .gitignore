@@ -6,3 +6,4 @@ Dockerfiles/dags
 Dockerfiles/grafana_data
 Docker
 *.swp
+desktop.ini
