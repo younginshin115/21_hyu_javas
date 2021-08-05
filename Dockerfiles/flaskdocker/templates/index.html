@@ -6,12 +6,16 @@
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         <script>
-            alert("{{messages[-1]}}")
+            function htmlDecode(input) {
+                var doc = new DOMParser().parseFromString(input, "text/html");
+                return doc.documentElement.textContent;
+            }
+            alert(htmlDecode("{{messages[-1]}}"))
         </script>
     {% endif %}
 {% endwith %}
 
-<form action="chatcategory" method="post" enctype="multipart/form-data">
+<form action="javas" method="post" enctype="multipart/form-data">
     <div class="url_wrap">
         <div class="url_div">
             <img class="icon_btn" src="{{ url_for('static', filename='logo_new.png') }}" />

@@ -2,108 +2,113 @@
 {% block content %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ajax-cross-origin.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/email.min.js') }}"></script>
+<script type="text/javascript">
+    (function() {
+        emailjs.init('user_UlShQDbXAwOyCECs6uKDN');
+    })();
+</script>
+<script type="text/javascript">
+    window.onload = function() {
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            this.contact_number.value = Math.random() * 100000 | 0;
+            emailjs.sendForm('service_fatz8m6', 'template_zg72uch', this)
+                .then(function() {
+                    alert('성공적으로 전송되었습니다!');
+                    console.log('SUCCESS!');
+                }, function(error) {
+                    console.log('FAILED...', error);
+                });
+        });
+    }
+</script>
+
 <div class="header"><img class="icon_result" src="{{ url_for('static', filename='logo_new_white.png') }}" /></div>
 <div class="wrap">
-    <h2 style="text-align:left; margin: 10px"><font size="5px"> {{ data_list }} </font></h2>
+    <table class="title_table">
+        <tr>
+            <td width="85%">
+                <h2 style="text-align:left; margin: 10px"><font size="5px"> {{ data_list }} </font></h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input class="switch_input" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                <p class="switch_text">원본채팅 보기</p><p class="switch_text" style="display:none;">비속어 감추기</p>
+            </td>
+        </tr>
+    </table>
     <div class="chat_table_div">
         <table class="chat_table">
-            <thead>
-                <tr>
-                    <th class="chat_th 1">
-                        기존 채팅
-                    </th>
-                    <th class="chat_th 1">
-                        필터링
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="chat_td">
-                        <div class="chat_div 1"></div>
-                    </td>
-                    <td class="chat_td">
-                        <div class="chat_div 2"></div>
-                    </td>
-                </tr>
-            </tbody>
+            <tr>
+                <td class="chat_td" style="display:none;">
+                    <div class="chat_div 1"></div>
+                </td>
+                <td class="chat_td">
+                    <div class="chat_div 2"></div>
+                </td>
+            </tr>
         </table>
     </div>
-    <table class="wordcloud_table">
-        <thead>
-            <tr>
-                <th class="chat_th 2">
-                    워드클라우드
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="chat_td">
-                    <img crossOrigin="anonymous" src="/static/wordcloud.png" class="word_cloud" onerror="this.src='/static/wordcloud.png'" />
-                </td>
-            </tr>
-            <tr>
-                <td valign="top">
-                    <table class="small_table 1" style="float:left">
-                        <tr>
-                            <th>감지된 욕설</th>
-                        </tr>
-                        <tr>
-                            <td class="small_td" align="center">
-                                <div class="abuse_div">&nbsp</div>
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="small_table 2" style="float:left">
-                        <tr>
-                            <th>긍/부정지수</th>
-                        </tr>
-                        <tr>
-                            <td class="small_td" align="center">
-                                <div class="emotion_div">&nbsp</div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <figure>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="container-fluid" id="data-container"></div>
+    <div class="etc_div">
+        <br/>
+        <img crossOrigin="anonymous" src="/static/wordcloud.png" class="word_cloud" onerror="this.src='/static/wordcloud.png'" />
+        <br/><br/>
+        <figure>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="container-fluid" id="data-container"></div>
+                </div>
             </div>
-        </div>
-    </figure>
+        </figure>
+    </div>
 </div>
 
 <div class="float_btn">
 <a href='/' class='btn-floating'><img class="icon home" src="{{ url_for('static', filename='home_icon.png') }}" title="돌아가기" /></a><br>
-<a href="javascript:openModal('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
+<a href="javascript:openModal1('modal_dashboard')" class='btn-floating modal-open'><img class="icon dashboard" src="{{ url_for('static', filename='dashboard_icon.png') }}" title="대시보드" /></a><br>
+<a href="javascript:openModal2('modal_question')" class='btn-floating modal-open'><img class="icon contact" src="{{ url_for('static', filename='contact_icon.png') }}" title="문의하기" /></a>
 </div>
 
-<div id="modal"></div>
+
+<div class="modal 1"></div>
+    <div class="modal-con modal_dashboard" style="width: 1000px;">
+        <a href="javascript:;" class="close">x</a>
+        <div class="con" style="text-align: center;">
+            <p class="title"><b>DASHBOARD</b></p>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=22" width="800" height="120" frameborder="0"></iframe>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=21" width="800" height="120" frameborder="0"></iframe>
+            <iframe src="http://52.149.146.199:3000/d-solo/491SUgGnz/application?orgId=1&refresh=5s&from=now-15m&to=now&theme=light&panelId=23" width="800" height="90" frameborder="0"></iframe>
+            <br><br>
+            <a class="detail" href="http://52.149.146.199:3000/d/491SUgGnz/application?orgId=1&refresh=5s&from=1628007767767&to=1628008667767" target='_blank'>자세히 보기</a>
+        </div>
+    </div>
+
+
+<div class="modal 2"></div>
     <div class="modal-con modal_question">
         <a href="javascript:;" class="close">x</a>
         <div class="con">
             <p class="title"><b>문의하기</b></p>
-            <form action="/my-handling-form-page" method="post" class="question_form">
+            <form id="contact-form" action="/my-handling-form-page" method="post" class="question_form">
+                <input type="hidden" name="contact_number">
                 <div>
-                    <label for="name">Name</label>
-                    <input class="question input" type="text" id="name" />
+                    <label>Name</label>
+                    <input class="question input" type="text" name="user_name" />
                 </div>
                 <div>
-                    <label for="mail">E-mail</label>
-                    <input class="question input" type="email" id="mail" />
+                    <label>E-mail</label>
+                    <input class="question input" type="email" name="user_email" />
                 </div>
                 <div>
-                    <label for="msg">Message</label>
-                    <textarea class="question textarea" id="msg"></textarea>
+                    <label>Message</label>
+                    <textarea class="question textarea" name="message"></textarea>
                 </div>
 
                 <div class="question_button" >
-                    <button type="submit">문의하기</button>
+                    <button type="submit" value="Send">문의하기</button>
                 </div>
             </form>
         </div>
@@ -115,67 +120,62 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/exporting.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/export-data.js') }}"></script>
 <script>
-    var abuse_num = 0;
-    var emotion_num = 0;
-    var replicaCheckArray = [];
-    var chart;
-    setInterval(function(){$.ajax({
-        crossOrigin: true,
-        url: '/update',
-        type: 'POST',
-        timeout: 60000,
-        success: function(response) {
-            if (jQuery.inArray(response['msg']['chat_id'], replicaCheckArray) == -1) {
-                replicaCheckArray.push(response['msg']['chat_id']);
-                $( ".chat_div.1" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
-                const abuse_result = $.trim(response['msg']['abuse']);
-                if ( abuse_result > 0.4 ) {
-                    $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp<i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
-                    abuse_num++;
-                } else {
-                    $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
-                }
-                const $messageTextBox = $('.chat_div');
-                $messageTextBox.scrollTop($messageTextBox[0].scrollHeight);
-                $( ".abuse_div" ).text( abuse_num );
+var abuse_num = 0;
+var emotion_num = 0;
+var replicaCheckArray = [];
+var chart;
 
-                const emotion_result = $.trim(response['msg']['emotion']);
-                if ( emotion_result > 0.4 ) {
-                    emotion_num++;
-                } else {
-                    emotion_num--;
-                }
-                $( ".emotion_div" ).text( emotion_num );
+setInterval(function(){$.ajax({
+    crossOrigin: true,
+    url: '/update',
+    type: 'POST',
+    timeout: 300000,
+    success: function(response) {
+        if (jQuery.inArray(response['msg']['chat_id'], replicaCheckArray) == -1) {
+            replicaCheckArray.push(response['msg']['chat_id']);
 
-                if ( emotion_num < 0 ) {
-                    $( ".small_table.2" ).css( "background-color", "#FFA7A7" );
-                } else if ( emotion_num > 0 ) {
-                    $( ".small_table.2" ).css( "background-color", "#B2CCFF" );
-                } else {
-                    $( ".small_table.2" ).css( "background-color", "#F6F6F6" );
-                }
+            $( ".chat_div.1" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
 
-                $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
-
-                var series = chart.series[0],
-                    shift = series.data.length > 20;
-
-                chart.series[0].addPoint([response['time_data'], emotion_num], true, shift);
-            }
-        },
-        error: function(xmlhttprequest, textstatus, message) {
-            if (textstatus==="timeout") {
-                alert("연결 시간이 초과되었습니다. 다시 시도하세요.");
-                history.go(-1);
+            const abuse_result = $.trim(response['msg']['abuse']);
+            if ( abuse_result > 0.4 ) {
+                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp<i><font color='gray'>욕설이 감지된 문장입니다</font></i></p>" );
+                abuse_num++;
             } else {
-                console.log(textstatus);
+                $( ".chat_div.2" ).append( "<p><b>"+response['msg']['user_name']+"</b>&nbsp&nbsp&nbsp"+response['msg']['chat_text']+"</p>" );
             }
+
+            $('.chat_div.1').scrollTop($('.chat_div.1')[0].scrollHeight);
+            $('.chat_div.2').scrollTop($('.chat_div.2')[0].scrollHeight);
+
+            const emotion_result = $.trim(response['msg']['emotion']);
+            if ( emotion_result > 0.4 ) {
+                emotion_num++;
+            } else {
+                emotion_num--;
+            }
+
+            $( ".word_cloud" ).attr( "src", "/static/img/" + response['image_name'] );
+
+            var series = chart.series[0],
+                shift = series.data.length > 20;
+
+            chart.series[0].addPoint([response['time_data'], emotion_num], true, shift);
         }
-    })}, 1000);
+    },
+    error: function(xmlhttprequest, textstatus, message) {
+        if (textstatus==="timeout") {
+            alert("연결 시간이 초과되었습니다. 다시 시도하세요.");
+            history.go(-1);
+        } else {
+            console.log(textstatus);
+        }
+    }
+})}, 1000);
 
 $(document).ready(function() {
     chart = new Highcharts.Chart({
         chart: {
+            height: 300,
             renderTo: 'data-container',
             defaultSeriesType: 'spline',
             events: {
@@ -197,8 +197,8 @@ $(document).ready(function() {
             minPadding: 0.2,
             maxPadding: 0.2,
             title: {
-                text: '긍부정 수치',
-                margin: 80
+                text: null,
+                margin: 0
             }
         },
         time: {
@@ -218,15 +218,29 @@ $(document).ready(function() {
     });
 });
 
-function openModal(modalname) {
+function openModal1(modalname) {
     document.get
-    $("#modal").fadeIn(300);
+    $(".modal.1").fadeIn(300);
     $("."+modalname).fadeIn(300);
 }
 
-$("#modal, .close").on('click', function() {
-    $("#modal").fadeOut(300);
+function openModal2(modalname) {
+    document.get
+    $(".modal.2").fadeIn(300);
+    $("."+modalname).fadeIn(300);
+}
+
+$(".modal, .close").on('click', function() {
+    $(".modal").fadeOut(300);
     $(".modal-con").fadeOut(300);
+});
+
+var check = $("input[type='checkbox']");
+check.click(function(){
+	$(".switch_text").toggle();
+	$(".chat_td").toggle();
+	$('.chat_div.1').scrollTop($('.chat_div.1')[0].scrollHeight);
+    $('.chat_div.2').scrollTop($('.chat_div.2')[0].scrollHeight);
 });
 
 </script>

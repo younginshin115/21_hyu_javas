@@ -2,7 +2,7 @@ FROM openjdk:8-jre-alpine
 
 MAINTAINER martinnowak
 
-ARG KAFKA_VERSION=2.8.0
+ARG KAFKA_VERSION=2.7.0
 ARG SCALA_VERSION=2.12
 # generate unique id by default
 ENV BROKER_ID=-1
@@ -24,8 +24,6 @@ RUN wget --quiet "http://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${
     rm -rf /tmp/kafka-logs/meta.properites && \
     rm -rf /var/lib/kafka/meta.properties && \
     sed -i 's|^log.dirs=.*$|log.dirs=/var/lib/kafka|' /opt/kafka/config/server.properties && \
-    sed -i "s|#advertised|advertised|g" /opt/kafka/config/server.properties && \
-    sed -i "s|your.host.name|52.149.146.199|g" /opt/kafka/config/server.properties && \    
     # for kafka scripts
     apk add --no-cache bash
 

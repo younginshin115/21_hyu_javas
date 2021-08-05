@@ -25,14 +25,15 @@
 |손덕기|deokki9880@gmail.com|
 |장지연|delayeon9934@naver.com|
 
-# 현재 배포되고 있는 서비스 URL
-http://52.149.146.199:5307
 
 ### 각 서비스 접속 URL
-|서비스|주소|
-|:---|:---|
-|airflow|http://52.149.146.199:8083/|
-|grafana|http://52.149.146.199:3000/|
+|서비스|주소|계정정보|
+|:---|:---|:---|
+|javas(챗봇웹서비스)|http://52.149.146.199:5307|-|
+|airflow|http://52.149.146.199:8083/|아이디: user<br>비밀번호: bitnami|
+|grafana|http://52.149.146.199:3000/|아이디: admin<br>비밀번호: admin|
+|burrow-api|http://52.149.146.199:7000/v3/kafka||
+|spark job api|http://52.149.146.199:4040/api/v1/applications||
 
 <br>
 
@@ -138,4 +139,10 @@ docker swarm init
 2. docker-compose up을 실행한다
 ```
 docker-compose up -d
+```
+
+## 서버 종료
+아래 명령어로 서버를 종료한다
+```
+docker-compose down
 ```
