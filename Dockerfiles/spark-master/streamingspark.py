@@ -18,8 +18,8 @@ spark = SparkSession \
 sc.addFile("/spark/abuse.py")
 import abuse
 
-sc.addFile("/spark/sentiment.py")
-import sentiment
+sc.addFile("/spark/sentiment_model_v2.py")
+import sentiment_model_v2 as sentiment
 
 df_raw = spark \
 .readStream \
@@ -31,7 +31,7 @@ df_raw = spark \
 
 df1 = df_raw.selectExpr('CAST(value AS STRING) as value')
 
-emotion_udf = udf(lambda x: sentiment.sentiment_predict(x), StringType())
+emotion_udf = udf(lambda x: sentiment.sentiment_model(x), StringType())
 abuse_udf = udf(lambda x: abuse.slang_predict(x), StringType())
 
 schema = StructType([ \
