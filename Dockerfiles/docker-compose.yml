@@ -169,7 +169,7 @@ services:
       - ./dags:/opt/bitnami/airflow/dags
 
   airflow:
-    image: docker.io/bitnami/airflow:2-debian-10
+    build: ./airflowdocker
     environment:
       - AIRFLOW_DATABASE_NAME=bitnami_airflow
       - AIRFLOW_DATABASE_USERNAME=bn_airflow
@@ -183,6 +183,7 @@ services:
       - 8083:8080
     volumes:
       - ./dags:/opt/bitnami/airflow/dags
+      - ./spark-master:/spark
       
   grafana:
     image: grafana/grafana
