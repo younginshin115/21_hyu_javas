@@ -19,7 +19,7 @@ body {
     align-items: center;
     justify-content: center;
 } .url_div {
-    width: 30%; min-width: 450px;
+    width: 450px;
     height: 600px;
     background: white;
     border-radius: 20px;
@@ -44,7 +44,7 @@ body {
 } .custom-select-trigger {
     position: relative;
     display: block;
-    width: 312px;
+    width: 310px;
     height: 50px;
     border-radius: 30px;
     border: 1px solid lightgray;
@@ -126,7 +126,7 @@ body {
     margin-top: 20px;
     width: 80%;
 } .video_url input {
-    width: 85%;
+    width: 310px;
     height: 50px;
     border-radius: 30px;
     margin-top: 10px;

@@ -123,7 +123,12 @@ docker exec -it [컨테이너 이름 또는 아이디] /bin/bash
 
 1. 아래 명령어로 spark 컨테이너에 submit을 한다.
 ```
-docker exec -it spark-master /spark/bin/spark-submit --master spark://spark-master:7077 --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /spark/streamingspark.py
+docker exec -it spark-master /spark/bin/spark-submit \
+--master spark://spark-master:7077 \
+--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 \
+--files /spark/metrics.properties \
+--conf spark.metrics.conf=/spark/metrics.properties \
+/spark/streamingspark.py
 ```
 
 2. IP:5307로 접속한다(포트가 열려있지 않은 경우 포트 열어주기)
