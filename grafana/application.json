@@ -118,7 +118,7 @@
           "timeField": "@timestamp"
         }
       ],
-      "title": "욕설수치",
+      "title": "비속어수치",
       "type": "stat"
     },
     {
@@ -182,7 +182,7 @@
       "pluginVersion": "8.0.6",
       "targets": [
         {
-          "alias": "욕설",
+          "alias": "비속어",
           "bucketAggs": [
             {
               "field": "@timestamp",
@@ -207,7 +207,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "분당 욕설 개수",
+      "title": "분당 비속어 개수",
       "type": "status-history"
     },
     {
@@ -627,7 +627,7 @@
           "hide": true,
           "refCount": 0,
           "refId": "A",
-          "target": "alias(perSecond(app-20210804144839-0000.0.executor.recordsRead.count), 'input_data')",
+          "target": "alias(perSecond(app-20210809234149-0000.0.executor.recordsRead.count), 'input_data')",
           "textEditor": false
         },
         {
@@ -844,5 +844,5 @@
   "timezone": "",
   "title": "application",
   "uid": "491SUgGnz",
-  "version": 33
+  "version": 39
 }

@@ -22,29 +22,19 @@ dag = DAG(
     schedule_interval = '*/1 * * * *',
     catchup = False)
 
-
-
 start = DummyOperator(
     task_id = "spark_submit_operator_start",
     dag = dag)
 
-# _config = {"application": "/spark/streamingtest.py",
-#     "master" : "spark://spark-master:7077",
-#     "pakages":"org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2",
-#     "files" : "/spark/metrics.properties",
-#     "conf" : "spark.metrics.conf=/spark/metrics.properties"
-# }    
-
-
 spark_job = SparkSubmitOperator(
     task_id = "spark_submit_operator_sparkjob",
     application = "/spark/streamingspark.py",
-    name = spark_app_name,
+    name = "spark_submit_operator",
     conn_id = "spark_default",
-    verbose = False,
-    conf = {"spark.master":spark_master},
-    application_args = [file_path],
-    dag = dag)
+    packages = "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2",
+    files = "/spark/metrics.properties",
+    conf = {"spark.metrics.conf" : "/spark/metrics.properties"}
+)
 
 end = DummyOperator(
     task_id = "spark_submit_operator_end",

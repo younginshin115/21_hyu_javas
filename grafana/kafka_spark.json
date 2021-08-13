@@ -590,7 +590,38 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "outchat"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "inchat"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
@@ -611,6 +642,7 @@
       },
       "targets": [
         {
+          "alias": "inchat",
           "groupBy": [
             {
               "params": [
@@ -625,10 +657,11 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "kafkaFlink",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "inChat",
+          "refId": "outChat",
           "resultFormat": "time_series",
           "select": [
             [
@@ -653,6 +686,7 @@
           ]
         },
         {
+          "alias": "outchat",
           "groupBy": [
             {
               "params": [
@@ -667,11 +701,10 @@
               "type": "fill"
             }
           ],
-          "hide": false,
           "measurement": "kafkaFlink",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "outChat",
+          "refId": "inChat",
           "resultFormat": "time_series",
           "select": [
             [
@@ -770,6 +803,7 @@
       },
       "targets": [
         {
+          "alias": "inchat",
           "groupBy": [
             {
               "params": [
@@ -812,6 +846,7 @@
           ]
         },
         {
+          "alias": "outchat",
           "groupBy": [
             {
               "params": [
@@ -894,7 +929,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 4,
+        "w": 3,
         "x": 0,
         "y": 14
       },
@@ -920,158 +955,11 @@
         {
           "refCount": 0,
           "refId": "A",
-          "target": "alias(app-20210804144839-0000.0.executor.recordsRead.count, 'throughput')",
+          "target": "alias(app-20210809234149-0000.0.executor.recordsRead.count, 'throughput')",
           "textEditor": false
         }
       ],
       "title": "총 task",
-      "type": "stat"
-    },
-    {
-      "datasource": "Graphite",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "throughput"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "semi-dark-purple",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 17,
-        "x": 4,
-        "y": 14
-      },
-      "id": 13,
-      "maxDataPoints": 4000,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "refCount": 0,
-          "refId": "A",
-          "target": "alias(app-20210804144839-0000.0.executor.recordsRead.count, 'throughput')",
-          "textEditor": false
-        }
-      ],
-      "title": "총 task",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Graphite",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "rgba(83, 92, 234, 1)",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 3,
-        "x": 21,
-        "y": 14
-      },
-      "id": 16,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "app-20210804144839-0000.0.executor.threadpool.activeTasks",
-          "textEditor": false
-        }
-      ],
-      "title": "threadpool_activateTasks",
       "type": "stat"
     },
     {
@@ -1127,9 +1015,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 4,
-        "x": 0,
-        "y": 20
+        "w": 3,
+        "x": 3,
+        "y": 14
       },
       "id": 17,
       "maxDataPoints": 4000,
@@ -1154,7 +1042,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(app-20210804144839-0000.0.executor.*.completeTasks, 'complete task')",
+          "target": "alias(app-20210809234149-0000.0.executor.*.completeTasks, 'complete task')",
           "textEditor": false
         }
       ],
@@ -1291,14 +1179,29 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "throughput"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
       "gridPos": {
         "h": 6,
-        "w": 16,
-        "x": 4,
-        "y": 20
+        "w": 10,
+        "x": 6,
+        "y": 14
       },
       "id": 14,
       "maxDataPoints": 4000,
@@ -1318,14 +1221,21 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(app-20210804144839-0000.0.executor.*.completeTasks, 'complete task')",
+          "target": "alias(app-20210809234149-0000.0.executor.*.completeTasks, 'complete task')",
           "textEditor": false
         },
         {
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(app-20210804144839-0000.0.executor.succeededTasks.count, 'succeeded task')",
+          "target": "alias(app-20210809234149-0000.0.executor.succeededTasks.count, 'succeeded task')",
+          "textEditor": false
+        },
+        {
+          "hide": false,
+          "refCount": 0,
+          "refId": "A",
+          "target": "alias(app-20210809234149-0000.0.executor.recordsRead.count, 'throughput')",
           "textEditor": false
         }
       ],
@@ -1372,9 +1282,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 4,
-        "x": 20,
-        "y": 20
+        "w": 3,
+        "x": 16,
+        "y": 14
       },
       "id": 19,
       "options": {
@@ -1398,7 +1308,7 @@
           "hide": true,
           "refCount": 0,
           "refId": "A",
-          "target": "app-20210804144839-0000.0.CodeGenerator.compilationTime.mean",
+          "target": "app-20210809234149-0000.0.CodeGenerator.compilationTime.mean",
           "textEditor": false
         },
         {
@@ -1411,6 +1321,86 @@
         }
       ],
       "title": "task 당 처리시간(초)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Graphite",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0.4,
+                "result": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Active"
+                },
+                "to": 1
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Inacitve"
+                },
+                "to": 0.4
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(83, 92, 234, 1)",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 19,
+        "y": 14
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 3
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "refId": "A",
+          "target": "app-20210809234149-0000.0.executor.threadpool.activeTasks",
+          "textEditor": false
+        }
+      ],
+      "title": "Task 실행여부",
       "type": "stat"
     }
   ],
@@ -1442,5 +1432,5 @@
   "timezone": "",
   "title": "kafka/spark",
   "uid": "fXczKCWnz",
-  "version": 33
+  "version": 40
 }
