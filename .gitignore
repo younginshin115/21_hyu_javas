@@ -6,9 +6,9 @@ Dockerfiles/grafana_data/csv
 Dockerfiles/grafana_data/png
 Dockerfiles/grafana_data/grafana.db
 Dockerfiles/influxdb_data/
-Dockerfiles/graphite_data/storage/
-Dockerfiles/graphite_data/statsd_config/
+Dockerfiles/graphite_data/
 Dockerfiles/dags/__pycache__/
 Docker
 *.swp
 desktop.ini
+.vscode

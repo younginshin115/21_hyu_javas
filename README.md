@@ -15,25 +15,14 @@
 
 - 채팅창의 트렌드를 파악하기 위해 실시간 빈도순 워드 클라우드 제공 
 
-## 프로젝트 팀(총 6명)
-|이름|이메일|
-|:----:|:---|
-|이수현|lshyun955@gmail.com|
-|신영인|younginshin115@gmail.com|
-|임재일|jaeillim89@naver.com|
-|맹광국|ggmaeng@gmail.com|
-|손덕기|deokki9880@gmail.com|
-|장지연|delayeon9934@naver.com|
-
-
-### 각 서비스 접속 URL
-|서비스|주소|계정정보|
-|:---|:---|:---|
-|javas(챗봇웹서비스)|http://52.149.146.199:5307|-|
-|airflow|http://52.149.146.199:8083/|아이디: user<br>비밀번호: bitnami|
-|grafana|http://52.149.146.199:3000/|아이디: admin<br>비밀번호: admin|
-|burrow-api|http://52.149.146.199:7000/v3/kafka||
-|spark job api|http://52.149.146.199:4040/api/v1/applications||
+## 프로젝트 팀 인원 : 총 6명
+### 팀내 역할
+<b>역할 1 프로젝트 전체 관리 및 최종 발표<br></b>
+<b>역할 2 Docker를 사용하여 총 18개 서비스, 21개 컨테이너로 구성된 데이터 실시간 플랫폼 구성<br></b>
+<b>역할 3 웹개발(서버, 클라이언트)<br></b>
+- 이용자가 라이브 방송 채널을 선택하고 URL을 입력하면 해당 방송의 채팅을 실시간으로 스크레이핑하여 Kafka로 전송하는 기능 개발
+- Ajax로 실시간 채팅 뷰어와 워드클라우드 기능 개발, Highchart로 실시간 그래프 클라이언트에 표시, iframe으로 Grafana 대시보드를 클라이언트에 표시, emailJS로 문의메일 보내는 기능 개발
+- Python의 Multiprocessing으로 웹서비스를 담당하는 메인 프로세스와 채팅 메시지 스크레이핑 후 Kafka에 데이터를 전송하는 차일드 프로세스, Kafka에서 데이터를 수신 받아 웹에 표시하는 차일드 프로세스, 총 세가지 프로세스로 구성된 비동기 프로세스 환경 구성
 
 <br>
 
@@ -51,23 +40,59 @@
 ||Python|Spark Container - 3.8.3<br>Flask Container - 3.9.5|
 ||Scala|2.12|
 |DB|MongoDB|4.4.6|
-||InfluxDB|TBD|
+||InfluxDB|1.8.6|
 |파이프라인|Kafka|2.8.0|
 ||Spark|3.1.2|
 ||Hadoop|3.2|
 ||Airflow|2.1.2|
-||Flink|TBD|
+||Flink|1.13.1|
+||Logstash|7.13.0|
+||Elasticsearch|7.13.0|
+||Grafana|8.0.6|
+||Graphite|1.1.8|
+||Burrow|11.1|
+||Telegraf|1.19.1|
+|Web|Nginx|1.14.0|
+||uWSGI|2.0.19|
+||Flask|2.0.1|
 |ML|Tensorflow|2.5.0|
 ||Keras|2.4.3|
 ||NLTK|2.6.2|
 ||KoNLPy|0.5.2|
-|협업툴|Gitlab, Onedrive, Slack||
+|협업툴|GitLab, OneDrive,<br>Slack, OneNote||
 
+<br>
 
-ML: Keras, CNN-LSTM 
+# Directories
+|디렉토리명|소개|
+|:---|:---|
+|airflowdocker|Airflow 컨테이너 빌드 관련 디렉토리|
+|burrowdocker|Burrow 컨테이너 빌드 관련 디렉토리, git clone한 것|
+|dags|Airflow 컨테이너의 /opt/bitnami/airflow/dags 디렉토리와 volume 옵션으로 연결해놓은 폴더로 Airflow의 dags 설정 파일이 저장된 디렉토리|
+|elasticsearch|Elasticsearch 컨테이너 빌드 관련 디렉토리<br>config : Elasticsearch 컨테이너의 /usr/share/elasticsearch/config 디렉토리와 volume 설정으로 연결된 디렉토리로 설정 파일이 저장된 디렉토리|
+|flaskdocker|Flask 컨테이너 빌드 관련 디렉토리<br>해당 디렉토리 README.md 참조|
+|flink_lib|Flink 컨테이너의 /opt/flink/usrlib 디렉토리와 volume 옵션으로 연결된 디렉토리로 Flink에서 사용하는 jar 파일이 저장된 디렉토리|
+|grafana_data|Grafana 컨테이너의 /var/lib/grafana 디렉토리와 volume 옵션으로 연결된 디렉토리로 Grafana 실행에 필요한 데이터들이 저장되며 plugins 폴더만 제출|
+|kafkadocker|Kafka 컨테이너 빌드 관련 디렉토리|
+|logstash|Logstash 컨테이너 빌드 관련 디렉토리<br>config: Logstash 컨테이너의 /usr/share/logstash/config 디렉토리와 volume 옵션으로 연결된 디렉토리로 Logstash 설정 파일이 저장된 디렉토리<br>pipeline : Logstash 컨테이너의 /usr/share/logstash/pipeline 디렉토리와 volume 옵션으로 연결된 디렉토리로 수집용 설정 파일이 저장된 디렉토리|
+|nginxdocker|Nginx 컨테이너 빌드 관련 디렉토리|
+|spark-master|Spark 컨테이너 빌드 관련 디렉토리|
+|telegrafdocker|Telegraf 컨테이너의 /etc/telegraf/telegraf.conf 디렉토리와 volume 옵션으로 연결된 디렉토리로 Telegraf 설정 파일이 저장된 디렉토리|
+|docker-compose.yml|Docker-compose 설정 파일|
+|grafana|Grafana Dashboard json 파일이 저장된 디렉토리|
 
+<br>
 
 # Usage
+
+## 사용하기 전에
+1. 설명(https://developers.google.com/youtube/v3/live/registering_an_application)에 따라 Youtube Livestreaming API를 발급받아 /Dockerfiles/flaskdocker/c_crawling.py 20번째 줄에 있는 {youtube_api_key}에 입력 후 저장한다.
+
+2. 설명(https://dev.twitch.tv/docs/authentication/getting-tokens-oauth)에 따라 Twitch Token을 발급받아 /Dockerfiles/flaskdocker/c_crawling.py 46번째 줄에 있는 {twitch_token}에 입력 후 저장한다.
+
+3. /Dockerfiles/flaskdocker/c_crawling.py 47번째 줄에 있는 {user_name}에 Twitch ID를 입력 후 저장한다.
+
+<br>
 
 ## Ubuntu에서 컨테이너 실행
 1. docker-compose.yml 파일이 있는 Dockerfiles 디렉토리로 이동

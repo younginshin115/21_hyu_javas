@@ -15,8 +15,8 @@ spark = SparkSession \
 .config("spark.some.config.option", "some-value") \
 .getOrCreate()
 
-sc.addFile("/spark/abuse.py")
-import abuse
+sc.addFile("/spark/abuse_model_v1.py")
+import abuse_model_v1 as abuse
 
 sc.addFile("/spark/sentiment_model_v2.py")
 import sentiment_model_v2 as sentiment

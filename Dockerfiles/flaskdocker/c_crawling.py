@@ -17,7 +17,7 @@ ck = c_kafka.c_kafka()
 
 class c_crawling():
     def youtube_to_kafka(self, url_id, topic):
-        pafy.set_api_key('AIzaSyB0oN8aGAJDk5PEWpR07Tn7gN4w30fwnOI')
+        pafy.set_api_key('{youtube_api_key}')
 
         num = 0
         chat = LiveChat(video_id=url_id, topchat_only='FALSE', interruptable=False)
@@ -43,8 +43,8 @@ class c_crawling():
         server = 'irc.chat.twitch.tv'
         sock.connect((server, port))
 
-        token = 'oauth:snc65htpml9l2qxx3qfb75qqqe1swm'
-        nickname = 'deokki9880'
+        token = '{twitch_token}'
+        nickname = '{user_name}'
         channel = "#"+url_id
 
         sock.send(f"PASS {token}\n".encode('utf-8'))
